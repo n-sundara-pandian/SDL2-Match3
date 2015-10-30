@@ -5,7 +5,7 @@
 #include <GameStates/BaseState/GameManager.h>
 #include <GameStates/CGameState.h>
 #include <GameStates/CMenuState.h>
-#include "Utils/Renderer.h"
+#include "Utils/CRenderer.h"
 
 CMenuState CMenuState::m_MenuState;
 

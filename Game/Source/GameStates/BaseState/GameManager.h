@@ -9,7 +9,7 @@
 using namespace std;
 class CGameState;
 struct SDL_Window;
-class Renderer;
+class CRenderer;
 
 class CGameManager
 {
@@ -30,12 +30,12 @@ public:
 	bool Running() { return m_running; }
 	void Quit() { m_running = false; }
 
-  Renderer *GetRenderer() { return m_renderer; }
+  CRenderer *GetRenderer() { return m_renderer; }
 private:
 	// the stack of states
 	vector<CGameState*> states;
   SDL_Window *m_window;
-  Renderer *m_renderer;
+  CRenderer *m_renderer;
 
 	bool m_running;
 	bool m_fullscreen;

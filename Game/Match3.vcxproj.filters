@@ -35,11 +35,17 @@
       <Filter>Source\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\Utils\Renderer.cpp">
+    <ClCompile Include="Source\Utils\CRenderer.cpp">
       <Filter>Source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utils\Sprite.cpp">
+    <ClCompile Include="Source\Utils\CSprite.cpp">
       <Filter>Source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Match3\CItem.cpp">
+      <Filter>Source\Match3</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Match3\CBoard.cpp">
+      <Filter>Source\Match3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,17 +64,23 @@
     <ClInclude Include="source\gamestates\CPlayState.h">
       <Filter>Source\GameStates</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utils\Renderer.h">
-      <Filter>Source\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utils\Sprite.h">
-      <Filter>Source\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Utils\Vector.h">
       <Filter>Source\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utils\Common.h">
       <Filter>Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\CRenderer.h">
+      <Filter>Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\CSprite.h">
+      <Filter>Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Match3\CItem.h">
+      <Filter>Source\Match3</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Match3\CBoard.h">
+      <Filter>Source\Match3</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

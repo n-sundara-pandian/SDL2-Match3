@@ -14,4 +14,5 @@ struct Vector {
   }
 };
 
+typedef Vector<int> Vector2i;
 #endif /* VECTOR_H_ */

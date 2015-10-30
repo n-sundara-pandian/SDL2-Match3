@@ -4,7 +4,7 @@
 #include <GameStates/BaseState/GameManager.h>
 #include <GameStates/CGameState.h>
 #include "SDL.h"
-#include "Utils/Renderer.h"
+#include "Utils/CRenderer.h"
 
 void CGameManager::Init(const char* title, int width, int height, 
 						 int bpp)
@@ -19,7 +19,7 @@ void CGameManager::Init(const char* title, int width, int height,
     std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
     return;
   }
-  m_renderer = new Renderer(m_window);
+  m_renderer = new CRenderer(m_window);
   //m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   //if (m_renderer == nullptr){
   //  std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;

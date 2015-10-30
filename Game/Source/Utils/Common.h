@@ -1,5 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
+#include <Match3/CBoard.h>
+#include <Match3/CItem.h>
 
 struct Utils
 {
@@ -7,19 +9,19 @@ struct Utils
   static const int gTileSize = 32;
   static const int gBoardStartX = 9;
   static const int gBoardStartY = 3;
-  static std::string GetFileName(Item::Color color)
+  static std::string GetFileName(CItem::Color color)
   {
     switch (color)
     {
-    case Item::Color::Red:
+    case CItem::Color::Red:
       return "data/Red.png";
-    case Item::Color::Blue:
+    case CItem::Color::Blue:
       return "data/Blue.png";
-    case Item::Color::Green:
+    case CItem::Color::Green:
       return "data/Green.png";
-    case Item::Color::Yellow:
+    case CItem::Color::Yellow:
       return "data/Yellow.png";
-    case Item::Color::Purple:
+    case CItem::Color::Purple:
       return "data/Purple.png";
     default:
       break;

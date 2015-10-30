@@ -5,14 +5,14 @@
 #include <map>
 #include <string>
 
-class Renderer
+class CRenderer
 {
 public:
-  Renderer() {}
-  Renderer(SDL_Window *window);
-  ~Renderer();
-  Renderer(const Renderer&) = delete;
-  Renderer& operator=(const Renderer&) = delete;
+  CRenderer() {}
+  CRenderer(SDL_Window *window);
+  ~CRenderer();
+  CRenderer(const CRenderer&) = delete;
+  CRenderer& operator=(const CRenderer&) = delete;
   SDL_Texture* loadImage(const std::string& file_name, const bool black_is_transparent = false);
   void renderTexture(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip = nullptr) const;
   void renderTexture(SDL_Texture *tex, const int x, const int y, const SDL_Rect *clip = nullptr) const;

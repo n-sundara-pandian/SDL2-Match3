@@ -1,9 +1,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
-#include "Utils/Renderer.h"
+#include "Utils/CRenderer.h"
 
 
-Renderer::Renderer(SDL_Window *window) :
+CRenderer::CRenderer(SDL_Window *window) :
 m_SDLRenderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC) },
 m_TextureList()
 {
@@ -11,7 +11,7 @@ m_TextureList()
   SDL_RenderSetLogicalSize(m_SDLRenderer, 640, 480);
 }
 
-Renderer::~Renderer()
+CRenderer::~CRenderer()
 {
   for (auto& kv : m_TextureList) {
     SDL_DestroyTexture(kv.second);
@@ -19,7 +19,7 @@ Renderer::~Renderer()
   SDL_DestroyRenderer(m_SDLRenderer);
 }
 
-SDL_Texture* Renderer::loadImage(const std::string& file_name, const bool black_is_transparent)
+SDL_Texture* CRenderer::loadImage(const std::string& file_name, const bool black_is_transparent)
 {
   if (m_TextureList.count(file_name) == 0) 
   {
@@ -42,15 +42,15 @@ SDL_Texture* Renderer::loadImage(const std::string& file_name, const bool black_
   return m_TextureList[file_name];
 }
 
-void Renderer::renderTexture(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip) const
+void CRenderer::renderTexture(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip) const
 {
   SDL_RenderCopy(m_SDLRenderer, tex, nullptr, &dst);
 }
-void Renderer::renderTexture(SDL_Texture *tex) const
+void CRenderer::renderTexture(SDL_Texture *tex) const
 {
   SDL_RenderCopy(m_SDLRenderer, tex, nullptr, nullptr);
 }
-void Renderer::renderTexture(SDL_Texture *tex,const int x,  const int y,  const SDL_Rect *clip) const
+void CRenderer::renderTexture(SDL_Texture *tex,const int x,  const int y,  const SDL_Rect *clip) const
 {
   SDL_Rect dst;
   dst.x = x;
@@ -65,12 +65,12 @@ void Renderer::renderTexture(SDL_Texture *tex,const int x,  const int y,  const 
   renderTexture(tex, dst, clip);
 }
 
-void Renderer::flip() const
+void CRenderer::flip() const
 {
   SDL_RenderPresent(m_SDLRenderer);
 }
 
-void Renderer::clear() const
+void CRenderer::clear() const
 {
   SDL_RenderClear(m_SDLRenderer);
 }

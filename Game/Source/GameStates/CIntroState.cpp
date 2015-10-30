@@ -7,7 +7,7 @@
 #include <GameStates/CIntroState.h>
 #include <GameStates/CPlayState.h>
 #include "SDL_image.h"
-#include "Utils/Renderer.h"
+#include "Utils/CRenderer.h"
 
 CIntroState CIntroState::m_IntroState;
 
