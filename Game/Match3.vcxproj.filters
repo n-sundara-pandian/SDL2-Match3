@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{fe734436-a310-4156-af60-53ce124c8a3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameStates">
+      <UniqueIdentifier>{f3df3a39-e71b-4554-bd30-0b14c33bc0c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameStates\BaseState">
+      <UniqueIdentifier>{5afb034a-fb64-4067-95ce-acd00cb4eec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utils">
+      <UniqueIdentifier>{ba5d5021-e9dd-40ee-8214-26e8db362a63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Match3">
+      <UniqueIdentifier>{739ce7b4-2357-41a0-bfa2-d00183232824}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\gamestates\basestate\GameManager.cpp">
+      <Filter>Source\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gamestates\CIntroState.cpp">
+      <Filter>Source\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gamestates\CMenuState.cpp">
+      <Filter>Source\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gamestates\CPlayState.cpp">
+      <Filter>Source\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Utils\Renderer.cpp">
+      <Filter>Source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utils\Sprite.cpp">
+      <Filter>Source\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\gamestates\basestate\GameManager.h">
+      <Filter>Source\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gamestates\CGameState.h">
+      <Filter>Source\GameStates\BaseState</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gamestates\CIntroState.h">
+      <Filter>Source\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gamestates\CMenuState.h">
+      <Filter>Source\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gamestates\CPlayState.h">
+      <Filter>Source\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\Renderer.h">
+      <Filter>Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\Sprite.h">
+      <Filter>Source\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\Vector.h">
+      <Filter>Source\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
