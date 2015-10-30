@@ -37,6 +37,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <EnableManagedIncrementalBuild>true</EnableManagedIncrementalBuild>
+    <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -48,13 +51,13 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>F:\Test\King\Match3\Game\Source;F:\Test\King\Match3\Lib\SDL2-2.0.3\include;F:\Test\King\Match3\Lib\SDL2_ttf-2.0.12\include;F:\Test\King\Match3\Lib\SDL2_image-2.0.0\include;F:\Test\King\Match3\Game\Source\SDLcpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Test\BitBucket\King\Match3\Game\Source;F:\Test\BitBucket\King\Match3\Lib\SDL2-2.0.3\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_ttf-2.0.12\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_image-2.0.0\include;F:\Test\BitBucket\King\Match3\Game\Source\SDLcpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>F:\Test\King\Match3\Lib\SDL2-2.0.3\lib\x86;F:\Test\King\Match3\Lib\SDL2_ttf-2.0.12\lib\x86;F:\Test\King\Match3\Lib\SDL2_mixer-2.0.0\lib\x86;F:\Test\King\Match3\Lib\SDL2_image-2.0.0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>F:\Test\BitBucket\King\Match3\Lib\SDL2-2.0.3\lib\x86;F:\Test\BitBucket\King\Match3\Lib\SDL2_ttf-2.0.12\lib\x86;F:\Test\BitBucket\King\Match3\Lib\SDL2_mixer-2.0.0\lib\x86;F:\Test\BitBucket\King\Match3\Lib\SDL2_image-2.0.0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -88,6 +91,7 @@
     <ClInclude Include="source\gamestates\CIntroState.h" />
     <ClInclude Include="source\gamestates\CMenuState.h" />
     <ClInclude Include="source\gamestates\CPlayState.h" />
+    <ClInclude Include="Source\Utils\Common.h" />
     <ClInclude Include="Source\Utils\Renderer.h" />
     <ClInclude Include="Source\Utils\Sprite.h" />
     <ClInclude Include="Source\Utils\Vector.h" />

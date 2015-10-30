@@ -8,7 +8,7 @@ m_SDLRenderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_REN
 m_TextureList()
 {
   SDL_assert(m_SDLRenderer != nullptr);
- // SDL_RenderSetLogicalSize(m_SDLRenderer, 640, 480);
+  SDL_RenderSetLogicalSize(m_SDLRenderer, 640, 480);
 }
 
 Renderer::~Renderer()
@@ -44,7 +44,7 @@ SDL_Texture* Renderer::loadImage(const std::string& file_name, const bool black_
 
 void Renderer::renderTexture(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip) const
 {
-  SDL_RenderCopy(m_SDLRenderer, tex, clip, &dst);
+  SDL_RenderCopy(m_SDLRenderer, tex, nullptr, &dst);
 }
 void Renderer::renderTexture(SDL_Texture *tex) const
 {
