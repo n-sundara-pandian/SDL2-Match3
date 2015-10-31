@@ -8,7 +8,7 @@ m_SDLRenderer{ SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_REN
 m_TextureList()
 {
   SDL_assert(m_SDLRenderer != nullptr);
-  SDL_RenderSetLogicalSize(m_SDLRenderer, 640, 480);
+  //SDL_RenderSetLogicalSize(m_SDLRenderer, window->, 480);
 }
 
 CRenderer::~CRenderer()

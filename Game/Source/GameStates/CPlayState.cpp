@@ -58,54 +58,34 @@ void CPlayState::HandleEvents(const SDL_Event &e)
         m_game->PushState(CMenuState::Instance());
         break;
       }
-      /*case SDLK_0:
+      case SDLK_SPACE:
       {
-        for (int i = 0; i < m_gameBoard.size(); i++)
-        {
-          m_gameBoard[i].SetTexture(m_game->GetRenderer(), "data/Red.png");
-        }
+        m_board.RemoveMatches();
+        //m_board.AnalyseBoard();
         break;
       }
-      case SDLK_1:
-      {
-        for (int i = 0; i < m_gameBoard.size(); i++)
-        {
-          m_gameBoard[i].SetTexture(m_game->GetRenderer(), "data/Blue.png");
-        }
-        break;
-      }
-      case SDLK_2:
-      {
-        for (int i = 0; i < m_gameBoard.size(); i++)
-        {
-          m_gameBoard[i].SetTexture(m_game->GetRenderer(), "data/Green.png");
-        }
-        break;
-      }
-      case SDLK_3:
-      {
-        for (int i = 0; i < m_gameBoard.size(); i++)
-        {
-          m_gameBoard[i].SetTexture(m_game->GetRenderer(), "data/Purple.png");
-        }
-        break;
-      }
-      case SDLK_4:
-      {
-        for (int i = 0; i < m_gameBoard.size(); i++)
-        {
-          m_gameBoard[i].SetTexture(m_game->GetRenderer(), "data/Yellow.png");
-        }
-        break;
-      }*/
     }
     break;
   case SDL_MOUSEBUTTONDOWN:
     if (e.button.button == SDL_BUTTON_LEFT)
     {
       //Get the mouse offsets
-      cout <<  e.button.x + " " +  e.button.y;
+      SDL_Log(" Grid Point %d ", Utils::GetTile(e.button.x, e.button.y));
+      int selected_item = Utils::GetTile(e.button.x, e.button.y);
+      if (selected_item != -1)
+        m_board.SetItemVisible(selected_item, CItem::State::InActive);
+      m_board.AnalyseBoard();
     }
+    if (e.button.button == SDL_BUTTON_RIGHT)
+    {
+      int selected_item = Utils::GetTile(e.button.x, e.button.y);
+      if (selected_item != -1)
+      {
+        SDL_Log("color at %d is %s", selected_item, Utils::GetFileName(m_board.GetColorAt(selected_item)).c_str());
+      }
+
+    }
+    break;
   default:
     break;
   }
@@ -113,7 +93,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
 
 void CPlayState::Update(float dt)
 {
-  
+  m_board.Update(dt);
 }
 
 void CPlayState::Draw()

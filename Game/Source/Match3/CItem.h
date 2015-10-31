@@ -1,6 +1,7 @@
 #ifndef CITEM_H
 #define CITEM_H
-#include "Utils/CSprite.h"
+#include <Utils/CSprite.h>
+#include <Utils/CAABB.h>
 
 class CGameManager;
 class CRenderer;
@@ -16,24 +17,28 @@ public:
     Yellow,
     Purple
   };
-  enum class Status
+  enum class State
   {
-    Moving,
     Active,
+    Moving,
     InActive
   };
 public:
-  CItem(Color color, Vector2i pos)
-    : m_color(color)
-    , m_status(Status::Active)
-    , m_position(pos)
-  {}
+  CItem(CRenderer *renderer, Color color, Vector2f pos);
+
+  State GetState() { return m_status; }
+  void SetState(State status) { m_status = status; }
+  void Draw();
+  void Update(float dt);
+  void SwapForMove(CItem &other);
+  void ChangeColor(int adjust_position);
+  Color GetColor(){ return m_color; }
 
 private:
-  Vector2i m_position;
-  Vector<float> m_actualPosition;
-  Vector<float> m_targetPosition;
+  CSprite *m_sprite;
+  Vector2f m_position;
+  Vector2f m_currentPosition;
   Color m_color;
-  Status m_status;
+  State m_status;
 };
 #endif

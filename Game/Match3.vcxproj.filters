@@ -47,6 +47,9 @@
     <ClCompile Include="Source\Match3\CBoard.cpp">
       <Filter>Source\Match3</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utils\CAABB.cpp">
+      <Filter>Source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gamestates\basestate\GameManager.h">
@@ -81,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="Source\Match3\CBoard.h">
       <Filter>Source\Match3</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utils\CAABB.h">
+      <Filter>Source\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ void CGameManager::Init(const char* title, int width, int height,
     std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
     return;
   }
-   m_window = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+   m_window = SDL_CreateWindow("Hello World!", 100, 100, width, height, SDL_WINDOW_SHOWN);
   if (m_window == nullptr){
     std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
     return;
@@ -26,7 +26,6 @@ void CGameManager::Init(const char* title, int width, int height,
   //  return;
   //}
   m_running = true;
-  cout << "CGameEngine Init\n";
 }
 
 void CGameManager::Cleanup()
@@ -40,8 +39,7 @@ void CGameManager::Cleanup()
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 
-	cout << "CGameEngine Cleanup\n";
-
+	
 	// shutdown SDL
 }
 
