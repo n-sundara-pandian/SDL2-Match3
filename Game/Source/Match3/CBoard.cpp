@@ -144,7 +144,7 @@ int CBoard::GetNextItemIndex(int cur_index, Direction dir)
     }
     case Direction::UP:
     {
-      if (((cur_index = 1) % Utils::gGridSize) == 0)   // out of bound
+      if (((cur_index - 1) % Utils::gGridSize) == 0)   // out of bound
         return -1;
       return cur_index - 1;
       break;

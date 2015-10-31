@@ -42,10 +42,8 @@ void CPlayState::Resume()
 
 void CPlayState::HandleEvents(const SDL_Event &e)
 {
-  //if (e.type == SDL_KEYDOWN)
-  switch (e.type)
+  if (e.type == SDL_KEYDOWN)
   {
-  case SDL_KEYDOWN:
     switch (e.key.keysym.sym)
     {
       case SDLK_ESCAPE:
@@ -65,8 +63,12 @@ void CPlayState::HandleEvents(const SDL_Event &e)
         break;
       }
     }
-    break;
-  case SDL_MOUSEBUTTONDOWN:
+  }
+  else if (e.type == SDL_MOUSEMOTION && e.button.button == SDL_BUTTON(SDL_BUTTON_RIGHT))
+  {
+  }
+  else if (e.type == SDL_MOUSEBUTTONDOWN)
+  {
     if (e.button.button == SDL_BUTTON_LEFT)
     {
       //Get the mouse offsets
@@ -83,11 +85,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
       {
         SDL_Log("color at %d is %s", selected_item, Utils::GetFileName(m_board.GetColorAt(selected_item)).c_str());
       }
-
     }
-    break;
-  default:
-    break;
   }
 }
 
