@@ -50,7 +50,30 @@ struct Utils
   static CItem::Color GetRandomColor()
   {
     return static_cast<CItem::Color>(rand() % 5);
-
+  }
+  static int GetRowFromIndex(int index)
+  {
+    return index % Utils::gGridSize;
+  }
+  static int GetColFromIndex(int index)
+  {
+    return index / Utils::gGridSize;
+  }
+  static std::string ToString(CBoard::State state)
+  {
+    switch (state)
+    {
+    case CBoard::State::Idle: return "Idle";
+    case CBoard::State::OneItemSelected: return "OneItemSelected";
+    case CBoard::State::BothItemSelected: return "BothItemSelected";
+    case CBoard::State::SwapItem: return "SwapItem";
+    case CBoard::State::ValidateMove: return "ValidateMove";
+    case CBoard::State::InvalidMove: return "InvalidMove";
+    case CBoard::State::ValidMove: return "ValidMove";
+    case CBoard::State::ValidateBoard: return "ValidateBoard";
+    case CBoard::State::GenerateBoard: return "GenerateBoard";
+    }
+    return "Invalid State";
   }
 };
 

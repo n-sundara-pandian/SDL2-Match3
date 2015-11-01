@@ -12,6 +12,10 @@ struct Vector {
   {
     return Vector{ x + rhs.x, y + rhs.y };
   }
+  Vector<T> operator-(const Vector<T>& rhs) const
+  {
+    return Vector{ x - rhs.x, y - rhs.y };
+  }
 };
 
 typedef Vector<int> Vector2i;

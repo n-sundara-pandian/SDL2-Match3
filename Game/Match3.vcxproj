@@ -84,6 +84,7 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Match3\CBoard.cpp" />
     <ClCompile Include="Source\Match3\CItem.cpp" />
+    <ClCompile Include="Source\Match3\HSM.cpp" />
     <ClCompile Include="Source\Utils\CAABB.cpp" />
     <ClCompile Include="Source\Utils\CRenderer.cpp" />
     <ClCompile Include="Source\Utils\CSprite.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="source\gamestates\CPlayState.h" />
     <ClInclude Include="Source\Match3\CBoard.h" />
     <ClInclude Include="Source\Match3\CItem.h" />
+    <ClInclude Include="Source\Match3\HSM.h" />
     <ClInclude Include="Source\Utils\CAABB.h" />
     <ClInclude Include="Source\Utils\Common.h" />
     <ClInclude Include="Source\Utils\CRenderer.h" />

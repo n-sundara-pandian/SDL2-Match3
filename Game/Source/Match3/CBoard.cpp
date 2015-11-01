@@ -1,14 +1,18 @@
 #include <Match3/CBoard.h>
 #include <Utils/CRenderer.h>
 #include <Utils/Common.h>
-
+#include <Match3/HSM.h>
 CBoard::CBoard(CRenderer* renderer)
   : m_renderer(renderer)
-  , m_currentItem(0)
 {
-  GenerateBoard();
+  
 }
 
+void CBoard::Init(HSM * stateMachine)
+{
+  m_stateMachine = stateMachine;
+  GenerateBoard();
+}
 void CBoard::GenerateBoard()
 {
   int m_total_items = Utils::gGridSize * Utils::gGridSize;
@@ -202,4 +206,94 @@ void CBoard::SetItemVisible(int item, CItem::State visible)
 CItem::Color CBoard::GetColorAt(int index)
 {
   return m_itemList[index].GetColor();
+}
+
+void CBoard::AddSelectedItem(int item)
+{
+  m_selectedItemList.push_back(item);
+  if (m_selectedItemList.size() > 2)
+    SDL_Log(" More than two items in selection");
+}
+
+void CBoard::ToIdle() { SDL_Log("ToIdle"); }
+void CBoard::ToOneItemSelected() {}
+void CBoard::ToBothItemSelected() {   m_stateMachine->Go(State::SwapItem); }
+void CBoard::ToTestSwapItem() { DoSwap(false); }
+void CBoard::ToActualSwap() {
+  if (m_selectedItemList.size() > 2)
+    SDL_Log(" More than two items in selection");
+  m_itemList[m_selectedItemList[0]].SwapForMove(m_itemList[m_selectedItemList[1]]);
+  m_selectedItemList.clear();
+  m_stateMachine->Go(State::ValidateBoard);
+}
+
+void CBoard::ToValidateMove() { 
+  ValidateMove(); 
+}
+void CBoard::ToInvalidMove() 
+{ 
+  DoSwap(true); 
+  m_selectedItemList.clear();
+}
+void CBoard::ToValidMove() { }
+void CBoard::ToValidateBoard() { SDL_Log(" To validate Board"); RemoveMatches(); }
+void CBoard::ToGenerateBoard() { SDL_Log(""); }
+
+void CBoard::DoSwap(bool reverse)
+{
+  if (m_selectedItemList.size() != 2)
+    SDL_Log(" More than two items in selection");
+  Vector2f diff = m_itemList[m_selectedItemList[1]].GetCurrentPosition() - m_itemList[m_selectedItemList[0]].GetCurrentPosition();
+  if (reverse)
+  {
+    m_itemList[m_selectedItemList[0]].SetRefPosition(CItem::Offset::MIDDLE);
+    m_itemList[m_selectedItemList[1]].SetRefPosition(CItem::Offset::MIDDLE);
+  }
+  else
+  {
+    m_itemList[m_selectedItemList[0]].SetRefPosition(diff);
+    m_itemList[m_selectedItemList[1]].SetRefPosition(Vector2f() - diff);
+  }
+  m_itemList[m_selectedItemList[0]].SetState(CItem::State::Moving);
+  m_itemList[m_selectedItemList[0]].SetSendEvent(true);
+  m_itemList[m_selectedItemList[1]].SetState(CItem::State::Moving);
+}
+
+void CBoard::ValidateMove()
+{
+  if (m_selectedItemList.size() != 2)
+    SDL_Log(" More than two items in selection");
+
+  for (int i = 0; i < 2; i++)
+  {
+    int match_count = 0;
+    int current_index = m_selectedItemList[i];
+    CItem::Color target_color = (i == 0) ? m_itemList[m_selectedItemList[1]].GetColor() : m_itemList[m_selectedItemList[0]].GetColor();
+    match_count = ProbeNeighbour(current_index, target_color, Direction::LEFT) + ProbeNeighbour(current_index, target_color, Direction::RIGHT) + 1;
+    if (match_count <= 2)
+      match_count = ProbeNeighbour(current_index, target_color, Direction::UP) + ProbeNeighbour(current_index, target_color, Direction::DOWN) + 1;
+    if (match_count > 2)
+    {
+      m_stateMachine->Go(State::ValidMove);
+      return;
+    }
+  }
+  m_stateMachine->Go(State::InvalidMove);
+}
+int CBoard::ProbeNeighbour(int current_index, CItem::Color target_color, Direction direction)
+{
+  int match_count = 0;
+  for (int i = 0; i < Utils::gGridSize; i++)
+  {
+    int next_index = GetNextItemIndex(current_index, direction);
+    if (next_index == -1)
+      return match_count;
+    if (m_itemList[next_index].GetColor() != target_color)
+      return match_count;
+    match_count++;
+    current_index = next_index;
+    if (match_count >= 2)
+      return match_count;
+  }
+  return match_count;
 }

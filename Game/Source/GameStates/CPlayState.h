@@ -5,6 +5,7 @@
 #include <GameStates/CGameState.h>
 #include <Utils/CSprite.h>
 #include <Match3/CBoard.h>
+#include <Match3/HSM.h>
 
 class CGameManager;
 class CRenderer;
@@ -31,9 +32,12 @@ protected:
 
 private:
 	static CPlayState m_PlayState;
+
+  CBoard m_board;
+  HSM m_stateMachine;
   CGameManager* m_game;
   SDL_Texture *m_bg;
-  CBoard m_board;
+  
 };
 
 #endif

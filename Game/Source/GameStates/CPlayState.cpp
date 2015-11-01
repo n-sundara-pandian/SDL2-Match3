@@ -8,8 +8,8 @@
 #include <GameStates/CPlayState.h>
 #include <GameStates/CMenuState.h>
 #include "SDL_image.h"
-#include "Utils/CRenderer.h"
-#include "Utils/Common.h"
+#include <Utils/CRenderer.h>
+#include <Utils/Common.h>
 
 CPlayState CPlayState::m_PlayState;
 using namespace std;
@@ -25,6 +25,8 @@ void CPlayState::Init(CGameManager* game)
     return;
   }
   m_board = CBoard(m_game->GetRenderer());
+  m_stateMachine.Init(&m_board);
+  m_board.Init(&m_stateMachine);
 }
 
 void CPlayState::Cleanup()
@@ -53,12 +55,14 @@ void CPlayState::HandleEvents(const SDL_Event &e)
       }
       case SDLK_m:
       {
-        m_game->PushState(CMenuState::Instance());
+       // m_game->PushState(CMenuState::Instance());
+        //m_stateMachine.AddTransit(std::make_pair(m_stateMachine.GetState(), CBoard::State::Idle), 
         break;
       }
       case SDLK_SPACE:
       {
         m_board.RemoveMatches();
+        SDL_Log(" Current State %s",Utils::ToString(m_stateMachine.GetState()).c_str());
         //m_board.AnalyseBoard();
         break;
       }
@@ -67,16 +71,38 @@ void CPlayState::HandleEvents(const SDL_Event &e)
   else if (e.type == SDL_MOUSEMOTION && e.button.button == SDL_BUTTON(SDL_BUTTON_RIGHT))
   {
   }
+  else if (e.type == SDL_USEREVENT)
+  {
+    if (m_stateMachine.GetState() == CBoard::State::SwapItem)
+      m_stateMachine.Go(CBoard::State::ValidateMove);
+    else if (m_stateMachine.GetState() == CBoard::State::InvalidMove)
+      m_stateMachine.Go(CBoard::State::Idle);
+  }
   else if (e.type == SDL_MOUSEBUTTONDOWN)
   {
     if (e.button.button == SDL_BUTTON_LEFT)
     {
-      //Get the mouse offsets
-      SDL_Log(" Grid Point %d ", Utils::GetTile(e.button.x, e.button.y));
       int selected_item = Utils::GetTile(e.button.x, e.button.y);
-      if (selected_item != -1)
-        m_board.SetItemVisible(selected_item, CItem::State::InActive);
-      m_board.AnalyseBoard();
+      if (selected_item != -1 && m_stateMachine.CanAcceptInput())
+      {
+        SDL_Log(" Grid Point %d ", Utils::GetTile(e.button.x, e.button.y));
+        CBoard::State state = m_stateMachine.GetState();
+        switch (state)
+        {
+        case CBoard::State::Idle:
+        {
+          m_board.AddSelectedItem(selected_item);
+          m_stateMachine.Go(CBoard::State::OneItemSelected);
+          break;
+        }
+        case CBoard::State::OneItemSelected:
+        {
+          m_board.AddSelectedItem(selected_item);
+          m_stateMachine.Go(CBoard::State::BothItemSelected);
+          break;
+        }
+        }
+      }
     }
     if (e.button.button == SDL_BUTTON_RIGHT)
     {

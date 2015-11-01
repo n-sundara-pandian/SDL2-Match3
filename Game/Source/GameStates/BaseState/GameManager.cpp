@@ -5,12 +5,12 @@
 #include <GameStates/CGameState.h>
 #include "SDL.h"
 #include "Utils/CRenderer.h"
+#include "Utils/Common.h"
 
 void CGameManager::Init(const char* title, int width, int height, 
 						 int bpp)
 {
-
-  if (SDL_Init(SDL_INIT_VIDEO) != 0){
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0){
     std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
     return;
   }
