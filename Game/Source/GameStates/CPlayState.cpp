@@ -56,13 +56,14 @@ void CPlayState::HandleEvents(const SDL_Event &e)
       case SDLK_m:
       {
        // m_game->PushState(CMenuState::Instance());
-        //m_stateMachine.AddTransit(std::make_pair(m_stateMachine.GetState(), CBoard::State::Idle), 
         break;
       }
       case SDLK_SPACE:
       {
-        m_board.RemoveMatches();
-        SDL_Log(" Current State %s",Utils::ToString(m_stateMachine.GetState()).c_str());
+   //     m_board.Animate();
+//        m_board.RemoveMatches();
+        m_stateMachine.Go(CBoard::State::Idle);
+        //SDL_Log(" Current State %s",Utils::ToString(m_stateMachine.GetState()).c_str());
         //m_board.AnalyseBoard();
         break;
       }
@@ -75,7 +76,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
   {
     if (m_stateMachine.GetState() == CBoard::State::SwapItem)
       m_stateMachine.Go(CBoard::State::ValidateMove);
-    else if (m_stateMachine.GetState() == CBoard::State::InvalidMove)
+    else if (m_stateMachine.GetState() == CBoard::State::NonMatchingMove)
       m_stateMachine.Go(CBoard::State::Idle);
   }
   else if (e.type == SDL_MOUSEBUTTONDOWN)
@@ -85,20 +86,28 @@ void CPlayState::HandleEvents(const SDL_Event &e)
       int selected_item = Utils::GetTile(e.button.x, e.button.y);
       if (selected_item != -1 && m_stateMachine.CanAcceptInput())
       {
-        SDL_Log(" Grid Point %d ", Utils::GetTile(e.button.x, e.button.y));
         CBoard::State state = m_stateMachine.GetState();
         switch (state)
         {
         case CBoard::State::Idle:
         {
           m_board.AddSelectedItem(selected_item);
+          m_board.CalculateNextValidTiles(selected_item);
           m_stateMachine.Go(CBoard::State::OneItemSelected);
           break;
         }
         case CBoard::State::OneItemSelected:
         {
-          m_board.AddSelectedItem(selected_item);
-          m_stateMachine.Go(CBoard::State::BothItemSelected);
+          if (m_board.IsValidSelection(selected_item))
+          {
+            m_board.AddSelectedItem(selected_item);
+            m_stateMachine.Go(CBoard::State::BothItemSelected);
+          }
+          else
+          {
+            m_board.ClearSeleceteditemList();
+            m_stateMachine.Go(CBoard::State::Idle);
+          }
           break;
         }
         }
@@ -118,6 +127,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
 void CPlayState::Update(float dt)
 {
   m_board.Update(dt);
+  m_stateMachine.Update(dt);
 }
 
 void CPlayState::Draw()

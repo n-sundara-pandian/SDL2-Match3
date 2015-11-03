@@ -16,8 +16,8 @@ public:
     BothItemSelected,
     SwapItem,
     ValidateMove,
-    InvalidMove,
-    ValidMove,
+    NonMatchingMove,
+    MatchingMove,
     ValidateBoard,
     GenerateBoard
   };
@@ -37,8 +37,7 @@ public:
   void Draw();
   void Update(float dt);
   bool HasMatch();
-  void SetItemVisible(int item, CItem::State visible);
-  void AnalyseBoard();
+  void FallDown();
   void ValidateMove();
   void RemoveMatches();
 
@@ -56,21 +55,28 @@ public:
   void ToGenerateBoard();
   void ToTestSwapItem();
   void ToActualSwap();
+  void CalculateNextValidTiles(int index);
+  bool IsValidSelection(int selected_item);
+  void Animate();
 
 private:
   std::vector<CItem> m_itemList;
+  std::vector<CSprite*> m_spriteList;
+
   std::vector<int> m_matchedItemList;
+  std::vector<int> m_nextValidSelectionList;
   CRenderer *m_renderer;
   HSM *m_stateMachine;
   std::vector<int> m_selectedItemList;
   SDL_TimerID m_delayTimer;
      
 private:
-  int GetStatusCount(int column_no, CItem::State status);
+
   int GetNextItemIndex(int cur_index, Direction dir);
-  int ProbeNeighbour(int index, CItem::Color target_color, Direction direction);
-  void DoSwap(bool reverse);
-
-
+  int ProbeNeighbour(int index, Direction direction);
+  void PlaySwapAnimation(int a, int b);
+  void DoItemSwap(int a, int b);
+  void SwapColor(int a, int b);
+  void SetItemStatus(int index, CItem::State state);
 };
 #endif // CBOARD_H

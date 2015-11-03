@@ -8,8 +8,8 @@ struct Utils
   public: 
   static const int gTileSize = 32;
   static const int gGridSize = 8;
-  static const int gBoardStartX = 9;
-  static const int gBoardStartY = 3;
+  static const int gStartCol = 9;
+  static const int gStartRow = 3;
 
   static std::string GetFileName(CItem::Color color)
   {
@@ -32,7 +32,7 @@ struct Utils
   }
   static bool IsPointInGrid(Vector2f point)
   {
-    Vector2f min(gBoardStartX * gTileSize, gBoardStartY * gTileSize);
+    Vector2f min(gStartCol * gTileSize, gStartRow * gTileSize);
     Vector2f max = min + Vector2f(gTileSize * gGridSize);
     Aabb bounding_box = Aabb(min, max);
     return bounding_box.contains(point);
@@ -43,9 +43,9 @@ struct Utils
     Vector2f point(mouse_x, mouse_y);
     if (!IsPointInGrid(point))
       return -1;
-    int x = (static_cast<int>(mouse_x) / gTileSize) - gBoardStartX;
-    int y = (static_cast<int>(mouse_y) / gTileSize) - gBoardStartY;
-    return x * gGridSize + y;
+    int col = (static_cast<int>(mouse_x) / gTileSize) - gStartCol;
+    int row = (static_cast<int>(mouse_y) / gTileSize) - gStartRow;
+    return Utils::GetIndexFromRowCol(row, col);
   }
   static CItem::Color GetRandomColor()
   {
@@ -59,6 +59,10 @@ struct Utils
   {
     return index / Utils::gGridSize;
   }
+  static int GetIndexFromRowCol(int row, int col)
+  {
+    return col * gGridSize + row;
+  }
   static std::string ToString(CBoard::State state)
   {
     switch (state)
@@ -68,8 +72,8 @@ struct Utils
     case CBoard::State::BothItemSelected: return "BothItemSelected";
     case CBoard::State::SwapItem: return "SwapItem";
     case CBoard::State::ValidateMove: return "ValidateMove";
-    case CBoard::State::InvalidMove: return "InvalidMove";
-    case CBoard::State::ValidMove: return "ValidMove";
+    case CBoard::State::NonMatchingMove: return "InvalidMove";
+    case CBoard::State::MatchingMove: return "ValidMove";
     case CBoard::State::ValidateBoard: return "ValidateBoard";
     case CBoard::State::GenerateBoard: return "GenerateBoard";
     }

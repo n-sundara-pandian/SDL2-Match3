@@ -16,6 +16,10 @@ struct Vector {
   {
     return Vector{ x - rhs.x, y - rhs.y };
   }
+  Vector<T> operator*(const T& amt) const
+  {
+    return Vector{ x  * amt, y *  amt };
+  }
 };
 
 typedef Vector<int> Vector2i;
