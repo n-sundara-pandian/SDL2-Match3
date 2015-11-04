@@ -4,13 +4,15 @@
 
 
 #include <vector>
+#include <map>
 #include "SDL_events.h"
 
-using namespace std;
+
 class CGameState;
 struct SDL_Window;
 class CRenderer;
 
+extern "C" { typedef struct _TTF_Font TTF_Font; }
 class CGameManager
 {
 public:
@@ -29,11 +31,12 @@ public:
 
 	bool Running() { return m_running; }
 	void Quit() { m_running = false; }
-
+  TTF_Font *GetFont(std::string font_name){ return m_fontList[font_name]; }
   CRenderer *GetRenderer() { return m_renderer; }
 private:
 	// the stack of states
-	vector<CGameState*> states;
+	std::vector<CGameState*> states;
+  std::map<std::string, TTF_Font*> m_fontList;
   SDL_Window *m_window;
   CRenderer *m_renderer;
 

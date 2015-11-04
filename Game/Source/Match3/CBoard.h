@@ -24,6 +24,7 @@ public:
     SyncBoard
   };
   typedef void (CBoard::*DoAction)(void);
+
   enum class Direction
   {
     LEFT,
@@ -62,6 +63,7 @@ public:
   void CalculateNextValidTiles(int index);
   bool IsValidSelection(int selected_item);
   void Animate();
+  bool IsBoardReady() { return m_boardReady; }
   std::vector<CItem> m_itemList;
 
 private:
@@ -72,14 +74,15 @@ private:
   HSM *m_stateMachine;
   std::vector<int> m_selectedItemList;
   SDL_TimerID m_delayTimer;
+  bool m_boardReady;
      
 private:
-
   int GetNextItemIndex(int cur_index, Direction dir);
   int ProbeNeighbour(int index, Direction direction);
   void PlaySwapAnimation(int a, int b);
   void DoItemSwap(int a, int b);
   void SetItemStatus(int index, CItem::State state);
   void ClearDirtyItems();
+  void PlayAnimation(CSprite *sprite, Vector2f to);
 };
 #endif // CBOARD_H

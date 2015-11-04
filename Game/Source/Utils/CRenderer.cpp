@@ -19,7 +19,7 @@ CRenderer::~CRenderer()
   SDL_DestroyRenderer(m_SDLRenderer);
 }
 
-SDL_Texture* CRenderer::loadImage(const std::string& file_name, const bool black_is_transparent)
+SDL_Texture* CRenderer::LoadImage(const std::string& file_name, const bool black_is_transparent)
 {
   if (m_TextureList.count(file_name) == 0) 
   {
@@ -42,15 +42,15 @@ SDL_Texture* CRenderer::loadImage(const std::string& file_name, const bool black
   return m_TextureList[file_name];
 }
 
-void CRenderer::renderTexture(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip) const
+void CRenderer::Render(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip) const
 {
   SDL_RenderCopy(m_SDLRenderer, tex, nullptr, &dst);
 }
-void CRenderer::renderTexture(SDL_Texture *tex) const
+void CRenderer::Render(SDL_Texture *tex) const
 {
   SDL_RenderCopy(m_SDLRenderer, tex, nullptr, nullptr);
 }
-void CRenderer::renderTexture(SDL_Texture *tex,const int x,  const int y,  const SDL_Rect *clip) const
+void CRenderer::Render(SDL_Texture *tex,const int x,  const int y,  const SDL_Rect *clip) const
 {
   SDL_Rect dst;
   dst.x = x;
@@ -62,15 +62,19 @@ void CRenderer::renderTexture(SDL_Texture *tex,const int x,  const int y,  const
   }
   else 
   SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);  
-  renderTexture(tex, dst, clip);
+  Render(tex, dst, clip);
 }
 
-void CRenderer::flip() const
+void CRenderer::Flip() const
 {
   SDL_RenderPresent(m_SDLRenderer);
 }
 
-void CRenderer::clear() const
+void CRenderer::Clear() const
 {
   SDL_RenderClear(m_SDLRenderer);
+}
+SDL_Texture* CRenderer::CreateTexture(SDL_Surface *surface)
+{
+  return SDL_CreateTextureFromSurface(m_SDLRenderer, surface);
 }

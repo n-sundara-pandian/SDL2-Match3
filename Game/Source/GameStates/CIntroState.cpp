@@ -23,7 +23,7 @@ void CIntroState::Init(CGameManager* game)
 	m_timeout = 0.5f;
   m_elapsed_time = 0.0f;
   m_active = true;
-  m_splash = m_game->GetRenderer()->loadImage("data/splash.png");
+  m_splash = m_game->GetRenderer()->LoadImage("data/splash.png");
   SDL_assert(m_splash != nullptr);
 }
 
@@ -58,5 +58,5 @@ void CIntroState::Update( float dt)
 void CIntroState::Draw() 
 {
   SDL_assert(m_splash != nullptr);
-  m_game->GetRenderer()->renderTexture( m_splash);
+  m_game->GetRenderer()->Render( m_splash);
 }

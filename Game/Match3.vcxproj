@@ -81,6 +81,8 @@
     <ClCompile Include="source\gamestates\CIntroState.cpp" />
     <ClCompile Include="source\gamestates\CMenuState.cpp" />
     <ClCompile Include="source\gamestates\CPlayState.cpp" />
+    <ClCompile Include="Source\GUI\GameHud.cpp" />
+    <ClCompile Include="Source\GUI\Timer.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Match3\CBoard.cpp" />
     <ClCompile Include="Source\Match3\CItem.cpp" />
@@ -88,6 +90,7 @@
     <ClCompile Include="Source\Utils\CAABB.cpp" />
     <ClCompile Include="Source\Utils\CRenderer.cpp" />
     <ClCompile Include="Source\Utils\CSprite.cpp" />
+    <ClCompile Include="Source\Utils\CTextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gamestates\basestate\GameManager.h" />
@@ -95,10 +98,13 @@
     <ClInclude Include="source\gamestates\CIntroState.h" />
     <ClInclude Include="source\gamestates\CMenuState.h" />
     <ClInclude Include="source\gamestates\CPlayState.h" />
+    <ClInclude Include="Source\GUI\GameHud.h" />
+    <ClInclude Include="Source\GUI\Timer.h" />
     <ClInclude Include="Source\Match3\CBoard.h" />
     <ClInclude Include="Source\Match3\CItem.h" />
     <ClInclude Include="Source\Match3\HSM.h" />
     <ClInclude Include="Source\Utils\CAABB.h" />
+    <ClInclude Include="Source\Utils\CTextRenderer.h" />
     <ClInclude Include="Source\Utils\Common.h" />
     <ClInclude Include="Source\Utils\CRenderer.h" />
     <ClInclude Include="Source\Utils\CSprite.h" />

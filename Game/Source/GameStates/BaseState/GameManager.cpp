@@ -4,6 +4,7 @@
 #include <GameStates/BaseState/GameManager.h>
 #include <GameStates/CGameState.h>
 #include "SDL.h"
+#include "SDL_ttf.h"
 #include "Utils/CRenderer.h"
 #include "Utils/Common.h"
 
@@ -20,11 +21,9 @@ void CGameManager::Init(const char* title, int width, int height,
     return;
   }
   m_renderer = new CRenderer(m_window);
-  //m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-  //if (m_renderer == nullptr){
-  //  std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-  //  return;
-  //}
+  TTF_Init();
+  m_fontList["timer_font"] = TTF_OpenFont("data/arialbd.ttf", 60);
+  m_fontList["button_font"] = TTF_OpenFont("data/arialbd.ttf", 24);
   m_running = true;
 }
 
@@ -97,8 +96,8 @@ void CGameManager::Update(float dt)
 
 void CGameManager::Draw() 
 {
-  m_renderer->clear();
+  m_renderer->Clear();
 	// let the state draw the screen
 	states.back()->Draw();
-  m_renderer->flip();
+  m_renderer->Flip();
 }

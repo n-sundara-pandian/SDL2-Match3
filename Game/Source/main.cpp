@@ -7,19 +7,12 @@
 int main ( int argc, char *argv[] )
 {
 	CGameManager game;
-  const int FPS = 60;
-  const int TICK = 1000 / FPS;
-  const int max_frame_skip = 10;
 
-	// initialize the engine
-	game.Init( "Engine Test v1.0" );
-
-	// load the intro
-	game.ChangeState( CIntroState::Instance() );
+	game.Init( "King Match3 Test" );
+  game.ChangeState( CIntroState::Instance() );
   SDL_Event input_event;
   int this_time = SDL_GetTicks();
   int last_time = this_time + 1;
-	// main loop
 	while ( game.Running() )
 	{
     this_time = SDL_GetTicks();
@@ -31,8 +24,6 @@ int main ( int argc, char *argv[] )
 		game.Draw();
     last_time = this_time;
 	}
-
-	// cleanup the engine
 	game.Cleanup();
 
 	return 0;

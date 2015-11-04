@@ -6,6 +6,7 @@
 #include <Utils/CSprite.h>
 #include <Match3/CBoard.h>
 #include <Match3/HSM.h>
+#include <GUI/GameHud.h>
 
 class CGameManager;
 class CRenderer;
@@ -23,6 +24,8 @@ public:
 	void Update(float dt) override;
 	void Draw() override;
 
+  void GameOver();
+
 	static CPlayState* Instance() {
 		return &m_PlayState;
 	}
@@ -36,6 +39,7 @@ private:
   CBoard m_board;
   HSM m_stateMachine;
   CGameManager* m_game;
+  GameHUD *m_gameHud;
   SDL_Texture *m_bg;
   
 };

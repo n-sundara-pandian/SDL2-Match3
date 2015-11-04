@@ -7,7 +7,7 @@ public:
   typedef std::map<std::pair<CBoard::State, CBoard::State>, CBoard::DoAction > TransitionMap;
   HSM();
   void Init(CBoard *board);
-  void Go(CBoard::State nextState, int delay = 0);
+  void Go(CBoard::State nextState, float delay = 0);
   bool CanTransit(CBoard::State nextState);
   bool CanAcceptInput() { return m_currentState == CBoard::State::Idle || m_currentState == CBoard::State::OneItemSelected; }
   CBoard::State GetState();
@@ -19,7 +19,7 @@ private:
   CBoard::State m_currentState;
   CBoard::State m_nextState;
   float m_elapsedTime;
-  int m_targetDelay;
+  float m_targetDelay;
 
 private:
   void DoTransition();

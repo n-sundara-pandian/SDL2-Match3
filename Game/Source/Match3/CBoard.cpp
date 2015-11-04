@@ -4,6 +4,7 @@
 #include <Match3/HSM.h>
 CBoard::CBoard(CRenderer* renderer)
   : m_renderer(renderer)
+  , m_boardReady(false)
 {
   
 }
@@ -24,7 +25,7 @@ void CBoard::GenerateBoard()
   {
     int row = Utils::GetRowFromIndex(i);
     int col = Utils::GetColFromIndex(i);
-    Vector2f screen_position(Utils::gStartCol + col, Utils::gStartRow + row);
+    Vector2f screen_position(Utils::gStartCol + col, Utils::gStartRow + row - 10);
     Vector2f position(col, row);
     CItem::Color c = Utils::GetRandomColor();
     m_itemList.push_back(CItem(c));
@@ -95,7 +96,7 @@ void CBoard::RemoveMatches()
     }
   }
   SDL_Log(" %d items matched ", m_matchedItemList.size());
-  std::map<int, int> match_table;
+  //std::map<int, int> match_table;
   for (int i = 0; i < m_matchedItemList.size(); i++)
   {
     int col = Utils::GetColFromIndex(m_matchedItemList[i]);
@@ -106,7 +107,7 @@ void CBoard::RemoveMatches()
   }
 
   if (m_matchedItemList.size() > 0)
-    m_stateMachine->Go(State::FallDown,1);
+    m_stateMachine->Go(State::FallDown,0.2f);
   else
     m_stateMachine->Go(State::Idle);
 }
@@ -133,12 +134,11 @@ void CBoard::FallDown()
         }
         int r = Utils::GetRowFromIndex(target_index);
         int c = Utils::GetColFromIndex(target_index);
-        m_spriteList[cur_index]->AnimateTo(Vector2f(Utils::gStartCol + c, Utils::gStartRow + r));
+        PlayAnimation(m_spriteList[cur_index], Vector2f(Utils::gStartCol + c, Utils::gStartRow + r));
         Utils::Swap(m_itemList, cur_index, target_index);
       }
     }
   }
-  Utils::printBoard(m_itemList);
 }
 
 void CBoard::ClearDirtyItems()
@@ -151,10 +151,11 @@ void CBoard::ClearDirtyItems()
       if (m_itemList[cur_index].GetState() == CItem::State::Dirty)
       {
         m_itemList[cur_index].ChangeColor();
-        m_itemList[cur_index].SetState(CItem::State::Clean);
         m_spriteList[cur_index]->SetTexture(Utils::GetFileName(m_itemList[cur_index].GetColor()));
-        m_spriteList[cur_index]->MoveTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow ));
-        m_spriteList[cur_index]->AnimateTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow + row ));
+        m_spriteList[cur_index]->MoveTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow - 10));
+        m_itemList[cur_index].SetState(CItem::State::Clean);
+        PlayAnimation(m_spriteList[cur_index],Vector2f(col + Utils::gStartCol, Utils::gStartRow + row));
+
       }
     }
   }  
@@ -210,9 +211,12 @@ void CBoard::Draw()
 
 void CBoard::Animate()
 {
-  for (int i = 0; i < m_itemList.size(); i++)
+  for (int i = 0; i < m_spriteList.size(); i++)
   {
-    m_spriteList[i]->AnimateTo(Vector2f());
+    int row = Utils::GetRowFromIndex(i);
+    int col = Utils::GetColFromIndex(i);
+    Vector2f screen_position(Utils::gStartCol + col, Utils::gStartRow + row);
+    PlayAnimation(m_spriteList[i], screen_position);
   }
 }
 
@@ -230,11 +234,16 @@ void CBoard::AddSelectedItem(int item)
 
 void CBoard::ToIdle() 
 { 
-  for (int i = 0; i < m_itemList.size(); i++)
+  if (!m_boardReady)
   {
-    m_spriteList[i]->SetTexture(Utils::GetFileName(m_itemList[i].GetColor()));
-    m_itemList[i].SetState(CItem::State::Clean);
+    m_boardReady = true;
+    Animate();
   }
+  //for (int i = 0; i < m_itemList.size(); i++)
+  //{
+  //  m_spriteList[i]->SetTexture(Utils::GetFileName(m_itemList[i].GetColor()));
+  //  m_itemList[i].SetState(CItem::State::Clean);
+  //}
 }
 void CBoard::OnOneSelected() {}
 
@@ -246,7 +255,7 @@ void CBoard::OnBothItemSelected()
 void CBoard::OnMakeMove() 
 {
   PlaySwapAnimation(m_selectedItemList[0], m_selectedItemList[1]);
-  m_stateMachine->Go(State::ValidateMove, 1);
+  m_stateMachine->Go(State::ValidateMove, 0.2f);
 }
 
 void CBoard::ToActualSwap() {
@@ -285,7 +294,7 @@ void CBoard::ToSyncBoard()
     SyncItemToPosition(i, false);
     m_itemList[i].SetState(CItem::State::Clean);
   }
-  m_stateMachine->Go(State::ValidateBoard, 1);
+  m_stateMachine->Go(State::ValidateBoard, 0.1f);
 };
 
 void CBoard::SyncItemToPosition(int i, bool bmove)
@@ -296,7 +305,7 @@ void CBoard::SyncItemToPosition(int i, bool bmove)
   if (bmove)
     m_spriteList[i]->MoveTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow + row));
   else
-    m_spriteList[i]->AnimateTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow + row));
+    PlayAnimation(m_spriteList[i], Vector2f(col + Utils::gStartCol, Utils::gStartRow + row));
 }
 void CBoard::ToGenerateBoard() 
 { 
@@ -364,10 +373,16 @@ void CBoard::CalculateNextValidTiles(int index)
 void CBoard::PlaySwapAnimation(int a, int b)
 {
   Vector2f temp = m_spriteList[a]->GetPosition();
-  m_spriteList[a]->AnimateTo(m_spriteList[b]->GetPosition());
-  m_spriteList[b]->AnimateTo(temp);
+  PlayAnimation( m_spriteList[a], m_spriteList[b]->GetPosition());
+  PlayAnimation( m_spriteList[b], temp);
 }
 void CBoard::SetItemStatus(int index, CItem::State state)
 {
   m_itemList[index].SetState(state);
+}
+
+void CBoard::PlayAnimation(CSprite *sprite, Vector2f to)
+{
+  if (m_boardReady)
+    sprite->AnimateTo(to);
 }

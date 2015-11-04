@@ -35,7 +35,13 @@ void HSM::Init(CBoard *board)
   m_transitionMap[std::make_pair(CBoard::State::SyncBoard, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
   m_transitionMap[std::make_pair(CBoard::State::ValidateBoard, CBoard::State::Idle)] = &CBoard::ToIdle;
 }
-void HSM::Go(CBoard::State nextState, int delay) {
+void HSM::Go(CBoard::State nextState, float delay) {
+  if (!m_board->IsBoardReady())
+  {
+    m_nextState = nextState;
+    DoTransition();
+    return;
+  }
   m_elapsedTime = 0.0f;
   m_nextState = nextState;
   if (delay == 0)

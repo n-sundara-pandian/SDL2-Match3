@@ -18,12 +18,13 @@ using namespace std;
 void CPlayState::Init(CGameManager* game)
 {
   m_game = game;
-  m_bg = m_game->GetRenderer()->loadImage("data/BackGround.jpg");  
+  m_bg = m_game->GetRenderer()->LoadImage("data/BackGround.jpg");  
   if (m_bg == nullptr)
   {
     SDL_assert(m_bg != nullptr);
     return;
   }
+  m_gameHud = new GameHUD(game);
   m_board = CBoard(m_game->GetRenderer());
   m_stateMachine.Init(&m_board);
   m_board.Init(&m_stateMachine);
@@ -36,10 +37,12 @@ void CPlayState::Cleanup()
 
 void CPlayState::Pause()
 {
+  m_gameHud->Pause();
 }
 
 void CPlayState::Resume()
 {
+  m_gameHud->Resume();
 }
 
 void CPlayState::HandleEvents(const SDL_Event &e)
@@ -127,16 +130,24 @@ void CPlayState::HandleEvents(const SDL_Event &e)
 
 void CPlayState::Update(float dt)
 {
+  if (m_board.IsBoardReady())
+    m_gameHud->Resume();
   m_board.Update(dt);
   m_stateMachine.Update(dt);
+  m_gameHud->Update(dt);
+  if (m_gameHud->IsGameOver())
+  {
+
+  }
 }
 
 void CPlayState::Draw()
 {
   CRenderer *renderer = m_game->GetRenderer();
-  renderer->clear();
-  renderer->renderTexture(m_bg);
+  renderer->Clear();
+  renderer->Render(m_bg);
   m_board.Draw();
-  renderer->flip();
+  m_gameHud->Draw();
+  renderer->Flip();
 }
 

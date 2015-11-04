@@ -11,16 +11,15 @@ public:
   CRenderer() {}
   CRenderer(SDL_Window *window);
   ~CRenderer();
-  CRenderer(const CRenderer&) = delete;
-  CRenderer& operator=(const CRenderer&) = delete;
-  SDL_Texture* loadImage(const std::string& file_name, const bool black_is_transparent = false);
-  void renderTexture(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip = nullptr) const;
-  void renderTexture(SDL_Texture *tex, const int x, const int y, const SDL_Rect *clip = nullptr) const;
-  void renderTexture(SDL_Texture *tex) const;
-  void flip() const;
-  void clear() const;
+  SDL_Texture* LoadImage(const std::string& file_name, const bool black_is_transparent = false);
+  SDL_Texture* CreateTexture(SDL_Surface *surface);
+  void Render(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip = nullptr) const;
+  void Render(SDL_Texture *tex, const int x, const int y, const SDL_Rect *clip = nullptr) const;
+  void Render(SDL_Texture *tex) const;
+  void Flip() const;
+  void Clear() const;
 
-private:
+protected:
   SDL_Renderer *m_SDLRenderer;
   std::map<std::string, SDL_Texture*> m_TextureList;
 };
