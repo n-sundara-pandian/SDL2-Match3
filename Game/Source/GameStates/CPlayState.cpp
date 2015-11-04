@@ -55,13 +55,14 @@ void CPlayState::HandleEvents(const SDL_Event &e)
       }
       case SDLK_m:
       {
-       // m_game->PushState(CMenuState::Instance());
+        Utils::printBoard(m_board.m_itemList);
+        SDL_Log("\n");
+        Utils::Swap(m_board.m_itemList, 1, 9);
+        Utils::printBoard(m_board.m_itemList);
         break;
       }
       case SDLK_SPACE:
       {
-   //     m_board.Animate();
-//        m_board.RemoveMatches();
         m_stateMachine.Go(CBoard::State::Idle);
         //SDL_Log(" Current State %s",Utils::ToString(m_stateMachine.GetState()).c_str());
         //m_board.AnalyseBoard();

@@ -14,12 +14,13 @@ void HSM::Init(CBoard *board)
 {
   m_board = board;
   // selection states
-  m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::OneItemSelected)] = &CBoard::ToOneItemSelected;
-  m_transitionMap[std::make_pair(CBoard::State::OneItemSelected, CBoard::State::BothItemSelected)] = &CBoard::ToBothItemSelected;
+  m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::OneItemSelected)] = &CBoard::OnOneSelected;
+  m_transitionMap[std::make_pair(CBoard::State::OneItemSelected, CBoard::State::BothItemSelected)] = &CBoard::OnBothItemSelected;
   m_transitionMap[std::make_pair(CBoard::State::OneItemSelected, CBoard::State::Idle)] = &CBoard::ToIdle;
+  m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
 
   // validate
-  m_transitionMap[std::make_pair(CBoard::State::BothItemSelected, CBoard::State::SwapItem)] = &CBoard::ToTestSwapItem;
+  m_transitionMap[std::make_pair(CBoard::State::BothItemSelected, CBoard::State::SwapItem)] = &CBoard::OnMakeMove;
   m_transitionMap[std::make_pair(CBoard::State::SwapItem, CBoard::State::ValidateMove)] = &CBoard::ToValidateMove;
 
   // invalid
@@ -28,18 +29,19 @@ void HSM::Init(CBoard *board)
 
   m_transitionMap[std::make_pair(CBoard::State::ValidateMove, CBoard::State::MatchingMove)] = &CBoard::ToActualSwap;
   m_transitionMap[std::make_pair(CBoard::State::MatchingMove, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
+  m_transitionMap[std::make_pair(CBoard::State::ValidateBoard, CBoard::State::FallDown)] = &CBoard::ToFallDown;
+  m_transitionMap[std::make_pair(CBoard::State::FallDown, CBoard::State::GenerateBoard)] = &CBoard::ToGenerateBoard;
+  m_transitionMap[std::make_pair(CBoard::State::GenerateBoard, CBoard::State::SyncBoard)] = &CBoard::ToSyncBoard;
+  m_transitionMap[std::make_pair(CBoard::State::SyncBoard, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
   m_transitionMap[std::make_pair(CBoard::State::ValidateBoard, CBoard::State::Idle)] = &CBoard::ToIdle;
-  //m_transitionMap[std::make_pair(CBoard::State::ValidMove, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
-  //m_transitionMap[std::make_pair(CBoard::State::ValidateBoard, CBoard::State::Idle)] = &CBoard::ToIdle;
-  //m_transitionMap[std::make_pair(CBoard::State::GenerateBoard, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
-  //m_transitionMap[std::make_pair(CBoard::State::GenerateBoard, CBoard::State::Idle)] = &CBoard::ToIdle;
 }
-void HSM::Go(CBoard::State nextState, float delay) {
-  m_targetDelay = delay;
+void HSM::Go(CBoard::State nextState, int delay) {
   m_elapsedTime = 0.0f;
   m_nextState = nextState;
-  if (m_targetDelay == 0.0f)
+  if (delay == 0)
     DoTransition();
+  else
+    m_targetDelay = delay;
 }
 
 bool HSM::CanTransit(CBoard::State nextState) {
@@ -62,13 +64,18 @@ void HSM::Update(float dt)
     m_elapsedTime += dt;
   if (m_targetDelay < m_elapsedTime)
   {
+    m_targetDelay = 0;
     DoTransition();
-    m_targetDelay = m_elapsedTime = 0;
   }
 }
 
 void HSM::DoTransition()
 {
+  if (m_currentState == m_nextState)
+  {
+    //SDL_Log(" Transfer to itself : can be dangerous %s ", Utils::ToString(m_currentState).c_str());
+    return; 
+  }
   std::pair<CBoard::State, CBoard::State> transition = std::make_pair(m_currentState, m_nextState);
   if (m_transitionMap.find(transition) == m_transitionMap.end()) {
     if (m_nextState == CBoard::State::Idle)
@@ -81,7 +88,6 @@ void HSM::DoTransition()
       return;
     }
   }
-  SDL_Log(" transferring from %s to %s . . .", Utils::ToString(m_currentState).c_str(), Utils::ToString(m_nextState).c_str());
   m_currentState = m_nextState;
   (m_board->*m_transitionMap[transition])();
 }

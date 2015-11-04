@@ -2,6 +2,7 @@
 #define COMMON_H
 #include <Match3/CBoard.h>
 #include <Match3/CItem.h>
+#include <vector>
 
 struct Utils
 {
@@ -29,6 +30,36 @@ struct Utils
       break;
     }
   return "data/Purple.png";
+  }
+  static std::string ToString(CItem::State state, bool bshort = false)
+  {
+    switch (state)
+    {
+    case CItem::State::Clean:
+      return  bshort ? "c" : "Clean";
+    case CItem::State::Dirty:
+      return  bshort ? "d" : "Dirty";
+    }
+    return "NONE";
+  }
+  static std::string ToString(CItem::Color color, bool bshort = false)
+  {
+    switch (color)
+    {
+    case CItem::Color::Red:
+      return bshort ? "r" : "Red";
+    case CItem::Color::Blue:
+      return bshort ? "b" : "Blue";
+    case CItem::Color::Green:
+      return bshort ? "g" : "Green";
+    case CItem::Color::Yellow:
+      return bshort ? "y" : "Yellow";
+    case CItem::Color::Purple:
+      return bshort ? "p" : "Purple";
+    default:
+      break;
+    }
+    return "NONE";
   }
   static bool IsPointInGrid(Vector2f point)
   {
@@ -79,6 +110,48 @@ struct Utils
     }
     return "Invalid State";
   }
+  static void printBoard(std::vector<CItem> &item_list)
+  {
+    std::string line_str = "";
+    for (int row = 0; row < gGridSize; row++)
+    {
+      for (int col = 0; col < gGridSize; col++)
+      {
+        int i = GetIndexFromRowCol(row, col);
+        std::string temp_str;
+        temp_str += " (" + std::to_string(row) + "," + std::to_string(col) + ") " + ToString(item_list[i].GetState(), true);
+        line_str += temp_str;
+      }
+      line_str += "\n";
+      SDL_Log("%s", line_str.c_str());
+      line_str = "";
+    }
+  }
+  static void Swap(std::vector<CItem> &item_list, int src, int trg)
+  {
+    CItem temp = item_list[src];
+    item_list[src] = item_list[trg];
+    item_list[trg] = temp;
+  }
+/*  static void printBoard()
+  {
+    std::string line_str = "";
+    for (int row = 0; row < gGridSize; row++)
+    {
+      for (int col = 0; col < gGridSize; col++)
+      {
+        int i = GetIndexFromRowCol(row, col);
+        int c = GetColFromIndex(i);
+        int r = GetRowFromIndex(i);
+        std::string temp_str;
+        temp_str += " (" + std::to_string(row) + "," + std::to_string(col) + ") " + std::to_string(i) + " (" + std::to_string(r) + "," + std::to_string(c) + ") ";
+        line_str += temp_str;
+      }
+      line_str += "\n";
+      SDL_Log("%s", line_str.c_str());
+      line_str = "";
+    }
+  }*/
 };
 
 

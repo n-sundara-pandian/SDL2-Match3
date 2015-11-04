@@ -19,7 +19,9 @@ public:
     NonMatchingMove,
     MatchingMove,
     ValidateBoard,
-    GenerateBoard
+    FallDown,
+    GenerateBoard,
+    SyncBoard
   };
   typedef void (CBoard::*DoAction)(void);
   enum class Direction
@@ -36,7 +38,6 @@ public:
   void GenerateBoard();
   void Draw();
   void Update(float dt);
-  bool HasMatch();
   void FallDown();
   void ValidateMove();
   void RemoveMatches();
@@ -44,25 +45,27 @@ public:
   CItem::Color GetColorAt(int index);
   void AddSelectedItem(int item);
   void ClearSeleceteditemList() { m_selectedItemList.clear(); }
+  void SyncItemToPosition(int index, bool bmove);
 
   void ToIdle();
-  void ToOneItemSelected();
-  void ToBothItemSelected();
+  void OnOneSelected();
+  void OnBothItemSelected();
   void ToValidateMove();
   void ToInvalidMove();
   void ToValidMove();
   void ToValidateBoard();
   void ToGenerateBoard();
-  void ToTestSwapItem();
+  void ToFallDown();
+  void ToSyncBoard();
+  void OnMakeMove();
   void ToActualSwap();
   void CalculateNextValidTiles(int index);
   bool IsValidSelection(int selected_item);
   void Animate();
+  std::vector<CItem> m_itemList;
 
 private:
-  std::vector<CItem> m_itemList;
   std::vector<CSprite*> m_spriteList;
-
   std::vector<int> m_matchedItemList;
   std::vector<int> m_nextValidSelectionList;
   CRenderer *m_renderer;
@@ -76,7 +79,7 @@ private:
   int ProbeNeighbour(int index, Direction direction);
   void PlaySwapAnimation(int a, int b);
   void DoItemSwap(int a, int b);
-  void SwapColor(int a, int b);
   void SetItemStatus(int index, CItem::State state);
+  void ClearDirtyItems();
 };
 #endif // CBOARD_H
