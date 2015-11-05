@@ -25,7 +25,7 @@ void CPlayState::Init(CGameManager* game)
     return;
   }
   m_gameHud = new GameHUD(game);
-  m_board = CBoard(m_game->GetRenderer());
+  m_board = CBoard(m_game->GetRenderer(), m_gameHud);
   m_stateMachine.Init(&m_board);
   m_board.Init(&m_stateMachine);
 }
@@ -58,47 +58,47 @@ void CPlayState::HandleEvents(const SDL_Event &e)
       }
       case SDLK_m:
       {
-        Utils::printBoard(m_board.m_itemList);
-        SDL_Log("\n");
-        Utils::Swap(m_board.m_itemList, 1, 9);
-        Utils::printBoard(m_board.m_itemList);
         break;
       }
       case SDLK_SPACE:
       {
-        m_stateMachine.Go(CBoard::State::Idle);
-        //SDL_Log(" Current State %s",Utils::ToString(m_stateMachine.GetState()).c_str());
-        //m_board.AnalyseBoard();
         break;
       }
     }
   }
-  else if (e.type == SDL_MOUSEMOTION && e.button.button == SDL_BUTTON(SDL_BUTTON_RIGHT))
-  {
-  }
-  else if (e.type == SDL_USEREVENT)
-  {
-    if (m_stateMachine.GetState() == CBoard::State::SwapItem)
-      m_stateMachine.Go(CBoard::State::ValidateMove);
-    else if (m_stateMachine.GetState() == CBoard::State::NonMatchingMove)
-      m_stateMachine.Go(CBoard::State::Idle);
+  else if (e.type == SDL_MOUSEMOTION && e.button.button == SDL_BUTTON(SDL_BUTTON_LEFT))
+  {    
+    int move_threshold = 3;
+    int x_rel = e.motion.xrel;
+    int x_diff = abs(x_rel);
+    int y_rel = e.motion.yrel;
+    int y_diff = abs(y_rel);
+    if (x_diff > move_threshold || y_diff > move_threshold)
+    {
+      ResetHint();
+      if ((m_stateMachine.GetState() == CBoard::State::OneItemSelected) || (m_stateMachine.GetState() == CBoard::State::Hint))
+        m_stateMachine.Go(CBoard::State::Idle);
+      m_board.RespondToSwipe(Vector2i(e.motion.x, e.motion.y), Vector2i(x_rel, y_rel), Vector2i(x_diff, y_diff));
+    }
   }
   else if (e.type == SDL_MOUSEBUTTONDOWN)
   {
     if (e.button.button == SDL_BUTTON_LEFT)
     {
-      int selected_item = Utils::GetTile(e.button.x, e.button.y);
+      int selected_item = Utils::GetTileFromScreenPosition(e.button.x, e.button.y);
       if (selected_item != -1 && m_stateMachine.CanAcceptInput())
       {
         CBoard::State state = m_stateMachine.GetState();
         switch (state)
         {
+        case CBoard::State::Hint:
         case CBoard::State::Idle:
         {
-          m_board.AddSelectedItem(selected_item);
-          m_board.CalculateNextValidTiles(selected_item);
-          m_stateMachine.Go(CBoard::State::OneItemSelected);
-          break;
+            m_board.AddSelectedItem(selected_item);
+            m_board.CalculateNextValidTiles(selected_item);
+            m_stateMachine.Go(CBoard::State::OneItemSelected);
+            ResetHint();
+            break;
         }
         case CBoard::State::OneItemSelected:
         {
@@ -106,11 +106,13 @@ void CPlayState::HandleEvents(const SDL_Event &e)
           {
             m_board.AddSelectedItem(selected_item);
             m_stateMachine.Go(CBoard::State::BothItemSelected);
+            ResetHint();
           }
           else
           {
             m_board.ClearSeleceteditemList();
             m_stateMachine.Go(CBoard::State::Idle);
+            ResetHint();
           }
           break;
         }
@@ -119,7 +121,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
     }
     if (e.button.button == SDL_BUTTON_RIGHT)
     {
-      int selected_item = Utils::GetTile(e.button.x, e.button.y);
+      int selected_item = Utils::GetTileFromScreenPosition(e.button.x, e.button.y);
       if (selected_item != -1)
       {
         SDL_Log("color at %d is %s", selected_item, Utils::GetFileName(m_board.GetColorAt(selected_item)).c_str());
@@ -135,9 +137,16 @@ void CPlayState::Update(float dt)
   m_board.Update(dt);
   m_stateMachine.Update(dt);
   m_gameHud->Update(dt);
-  if (m_gameHud->IsGameOver())
+  m_HintTimer += dt;
+  if (m_HintTimer > Utils::gHintTime)
   {
+    HandleHintState();
+    ResetHint();
+  }
 
+  if (m_gameHud->IsGameOver() && ((m_stateMachine.GetState() == CBoard::State::Idle) || (m_stateMachine.GetState() == CBoard::State::Hint)))
+  {
+    m_game->ChangeState(CMenuState::Instance());
   }
 }
 
@@ -151,3 +160,11 @@ void CPlayState::Draw()
   renderer->Flip();
 }
 
+void CPlayState::HandleHintState()
+{
+  CBoard::State state = m_stateMachine.GetState();
+  if (state == CBoard::State::Idle)
+  {
+    m_stateMachine.Go(CBoard::State::Hint);
+  }
+}

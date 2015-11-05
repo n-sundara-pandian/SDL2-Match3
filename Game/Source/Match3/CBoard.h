@@ -3,10 +3,26 @@
 #include <vector>
 #include <Utils/CSprite.h>
 #include <Match3/CItem.h>
+#include <Match3/CHint.h>
 
 class CGameManager;
 class CRenderer;
 class HSM;
+class GameHUD;
+struct MatchInfo 
+{
+  CItem::Color color;
+  int count;
+  int index;
+  int score;
+  MatchInfo(CItem::Color col, int no, int i)
+    : color(col)
+    , count(no)
+    , index(i)
+  {
+    score = count * 50;
+  }
+};
 class CBoard
 {
 public:
@@ -21,7 +37,8 @@ public:
     ValidateBoard,
     FallDown,
     GenerateBoard,
-    SyncBoard
+    SyncBoard,
+    Hint
   };
   typedef void (CBoard::*DoAction)(void);
 
@@ -34,7 +51,7 @@ public:
   };
 public:
   CBoard(){}
-  CBoard(CRenderer* renderer);
+  CBoard(CRenderer* renderer, GameHUD *gameHud);
   void Init(HSM * stateMachine);
   void GenerateBoard();
   void Draw();
@@ -51,6 +68,7 @@ public:
   void ToIdle();
   void OnOneSelected();
   void OnBothItemSelected();
+  void ToHint();
   void ToValidateMove();
   void ToInvalidMove();
   void ToValidMove();
@@ -64,18 +82,23 @@ public:
   bool IsValidSelection(int selected_item);
   void Animate();
   bool IsBoardReady() { return m_boardReady; }
-  std::vector<CItem> m_itemList;
+  void RespondToSwipe(Vector2i mouse_pos, Vector2i diff, Vector2i abs_diff);
 
 private:
+  std::vector<CItem> m_itemList;
   std::vector<CSprite*> m_spriteList;
+  std::vector<CSprite*> m_hintList;
   std::vector<int> m_matchedItemList;
+  std::vector<MatchInfo> m_matchInfoList;
   std::vector<int> m_nextValidSelectionList;
+  GameHUD *m_gameHud;
   CRenderer *m_renderer;
   HSM *m_stateMachine;
   std::vector<int> m_selectedItemList;
   SDL_TimerID m_delayTimer;
+  CPatternManager m_patternManager;
   bool m_boardReady;
-     
+  bool m_showHint;
 private:
   int GetNextItemIndex(int cur_index, Direction dir);
   int ProbeNeighbour(int index, Direction direction);

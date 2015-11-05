@@ -21,6 +21,7 @@ void CSprite::Draw(const Vector2f& pos) const
 {
   const int dstx = pos.x * m_SrcRect.w;
   const int dsty = pos.y * m_SrcRect.h;
+
   m_renderer->Render(m_texture, dstx, dsty, &m_SrcRect);
 }
 
@@ -55,3 +56,4 @@ void CSprite::MoveTo(const Vector2f &v)
   m_position = v;
   m_currentPosition = v;
 }
+

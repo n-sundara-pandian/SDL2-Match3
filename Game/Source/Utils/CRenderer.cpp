@@ -42,6 +42,7 @@ SDL_Texture* CRenderer::LoadImage(const std::string& file_name, const bool black
   return m_TextureList[file_name];
 }
 
+
 void CRenderer::Render(SDL_Texture *tex, const SDL_Rect dst, const SDL_Rect *clip) const
 {
   SDL_RenderCopy(m_SDLRenderer, tex, nullptr, &dst);
@@ -78,3 +79,4 @@ SDL_Texture* CRenderer::CreateTexture(SDL_Surface *surface)
 {
   return SDL_CreateTextureFromSurface(m_SDLRenderer, surface);
 }
+

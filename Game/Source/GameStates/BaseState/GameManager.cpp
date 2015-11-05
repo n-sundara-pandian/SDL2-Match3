@@ -23,8 +23,12 @@ void CGameManager::Init(const char* title, int width, int height,
   m_renderer = new CRenderer(m_window);
   TTF_Init();
   m_fontList["timer_font"] = TTF_OpenFont("data/arialbd.ttf", 60);
+  m_fontList["score_font"] = TTF_OpenFont("data/arialbd.ttf", 32);
   m_fontList["button_font"] = TTF_OpenFont("data/arialbd.ttf", 24);
+  m_fontList["bubble_font"] = TTF_OpenFont("data/arialbd.ttf", 16);
   m_running = true;
+  m_highScore = 0;
+  m_lastScore = 0;
 }
 
 void CGameManager::Cleanup()
@@ -100,4 +104,17 @@ void CGameManager::Draw()
 	// let the state draw the screen
 	states.back()->Draw();
   m_renderer->Flip();
+}
+
+void CGameManager::SetGameSettings(int last_score)
+{
+  if (last_score > m_highScore)
+    m_highScore = last_score;
+  m_lastScore = m_highScore;
+}
+
+void CGameManager::GetGameSettings(int &last_score, int &high_score)
+{
+  last_score = m_lastScore;
+  high_score = m_highScore;
 }

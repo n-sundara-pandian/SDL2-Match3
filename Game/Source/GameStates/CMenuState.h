@@ -3,8 +3,11 @@
 #define MENUSTATE_H
 
 #include <GameStates/CGameState.h>
+#include <memory>
 
 class CGameManager;
+class CTextRenderer;
+
 class CMenuState : public CGameState
 {
 public:
@@ -28,6 +31,11 @@ protected:
 private:
 	static CMenuState m_MenuState;
   CGameManager* m_game;
+  std::unique_ptr<CTextRenderer> m_gameOverText;
+  std::string m_msg;
+  std::string m_msg1;
+  int m_highScore;
+  int m_lastScore;
 };
 
 #endif

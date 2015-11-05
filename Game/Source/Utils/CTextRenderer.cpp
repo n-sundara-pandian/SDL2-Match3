@@ -12,6 +12,20 @@ void CTextRenderer::DrawText(TTF_Font* font, std::string str, Vector2i pos)
     SDL_Texture *texture = m_renderer->CreateTexture(surface);
     m_renderer->Render(texture, pos.x, pos.y);
 }
+void CTextRenderer::DrawText(TTF_Font* font, std::string str)
+{
+  DrawText(font, str, m_position);
+}
+
+void CTextRenderer::DrawText(TTF_Font* font)
+{
+  DrawText(font, m_text, m_position);
+}
+
+void CTextRenderer::SetColor(SDL_Color c)
+{
+  m_color = c;
+}
 
 void CTextRenderer::SetColor(int r, int g, int b, int a )
 {

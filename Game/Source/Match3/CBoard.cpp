@@ -2,9 +2,13 @@
 #include <Utils/CRenderer.h>
 #include <Utils/Common.h>
 #include <Match3/HSM.h>
-CBoard::CBoard(CRenderer* renderer)
+#include <GUI/GameHud.h>
+
+CBoard::CBoard(CRenderer* renderer, GameHUD *gameHud)
   : m_renderer(renderer)
+  , m_gameHud(gameHud)
   , m_boardReady(false)
+  , m_showHint(false)
 {
   
 }
@@ -19,6 +23,7 @@ void CBoard::GenerateBoard()
   int m_total_items = Utils::gGridSize * Utils::gGridSize;
   m_itemList.reserve(m_total_items);
   m_spriteList.reserve(m_total_items);
+  m_hintList.reserve(3);
   Vector2i sprite_size(Utils::gTileSize);
   srand(time(nullptr));
   for (int i = 0; i < m_total_items; i++)
@@ -31,12 +36,17 @@ void CBoard::GenerateBoard()
     m_itemList.push_back(CItem(c));
     m_spriteList.push_back(CSprite::CreateSprite(m_renderer, Utils::GetFileName(c), screen_position));
   }
+  for (int i = 0; i < 3; i++)
+  {
+    m_hintList.push_back(CSprite::CreateSprite(m_renderer, "data/hint.png", Vector2f(-20,20)));
+  }
   m_stateMachine->Go(State::ValidateBoard);
 }
 
 void CBoard::RemoveMatches()
 {
   m_matchedItemList.clear();
+  m_matchInfoList.clear();
   std::vector<int> match_list;
   for (int col = 0; col < Utils::gGridSize; col++)
   {
@@ -51,7 +61,10 @@ void CBoard::RemoveMatches()
         if (m_itemList[cur_index].GetColor() == m_itemList[prev_index].GetColor())
           match_list.push_back(cur_index);
         if (match_list.size() > 2)
+        {
           m_matchedItemList.insert(m_matchedItemList.end(), match_list.begin(), match_list.end());
+          m_matchInfoList.push_back(MatchInfo(m_itemList[match_list[0]].GetColor(), match_list.size(), match_list[0]));
+        }
         match_list.clear();
         break;
       }
@@ -61,7 +74,10 @@ void CBoard::RemoveMatches()
       {
         match_list.push_back(cur_index);
         if (match_list.size() > 2)
+        {
           m_matchedItemList.insert(m_matchedItemList.end(), match_list.begin(), match_list.end());
+          m_matchInfoList.push_back(MatchInfo(m_itemList[match_list[0]].GetColor(), match_list.size(), match_list[0]));
+        }
         match_list.clear();
       }
     }
@@ -80,7 +96,10 @@ void CBoard::RemoveMatches()
           match_list.push_back(cur_index);
 
         if (match_list.size() > 2)
+        {
           m_matchedItemList.insert(m_matchedItemList.end(), match_list.begin(), match_list.end());
+          m_matchInfoList.push_back(MatchInfo(m_itemList[match_list[0]].GetColor(), match_list.size(), match_list[0]));
+        }
         match_list.clear();
         break;
       }
@@ -90,24 +109,27 @@ void CBoard::RemoveMatches()
       {
         match_list.push_back(cur_index);
         if (match_list.size() > 2)
+        {
           m_matchedItemList.insert(m_matchedItemList.end(), match_list.begin(), match_list.end());
+          m_matchInfoList.push_back(MatchInfo(m_itemList[match_list[0]].GetColor(), match_list.size(), match_list[1]));
+        }
         match_list.clear();
       }
     }
   }
   SDL_Log(" %d items matched ", m_matchedItemList.size());
-  //std::map<int, int> match_table;
   for (int i = 0; i < m_matchedItemList.size(); i++)
   {
     int col = Utils::GetColFromIndex(m_matchedItemList[i]);
     int row = Utils::GetRowFromIndex(m_matchedItemList[i]);
-    //match_table[col]++ ;
     SetItemStatus(m_matchedItemList[i], CItem::State::Dirty);
-    //m_spriteList[m_matchedItemList[i]]->MoveTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow - match_table[col]));
   }
 
   if (m_matchedItemList.size() > 0)
-    m_stateMachine->Go(State::FallDown,0.2f);
+  {
+    m_stateMachine->Go(State::FallDown, 0.2f);
+    m_gameHud->SetupScoreBubble(m_matchInfoList);
+  }
   else
     m_stateMachine->Go(State::Idle);
 }
@@ -207,6 +229,12 @@ void CBoard::Draw()
     if (m_itemList[i].GetState() == CItem::State::Clean)
       m_spriteList[i]->Draw();
   }
+  if (m_showHint)
+  for (int i = 0; i < 3; i++)
+  {
+    m_hintList[i]->Draw();
+  }
+
 }
 
 void CBoard::Animate()
@@ -239,16 +267,36 @@ void CBoard::ToIdle()
     m_boardReady = true;
     Animate();
   }
+  m_gameHud->DeactiveteBubble();
+
   //for (int i = 0; i < m_itemList.size(); i++)
   //{
   //  m_spriteList[i]->SetTexture(Utils::GetFileName(m_itemList[i].GetColor()));
   //  m_itemList[i].SetState(CItem::State::Clean);
   //}
 }
-void CBoard::OnOneSelected() {}
+
+void CBoard::ToHint()
+{
+  std::vector<int> color_list;
+  for (int i = 0; i < m_itemList.size(); i++)
+    color_list.push_back(static_cast<int>(m_itemList[i].GetColor()));
+  m_patternManager.Init(color_list);
+  m_patternManager.ConstructHintList();
+  CPatternManager::Hint h = m_patternManager.GetHint();
+  for (int i = 0; i < h.index_list.size(); i++)
+  {
+    int row = Utils::GetRowFromIndex(h.index_list[i]);
+    int col = Utils::GetColFromIndex(h.index_list[i]);
+    m_hintList[i]->MoveTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow + row));
+  }
+  m_showHint = true;
+}
+void CBoard::OnOneSelected() { m_showHint = false; }
 
 void CBoard::OnBothItemSelected() 
 {   
+  m_showHint = false;
   m_stateMachine->Go(State::SwapItem); 
 }
 
@@ -277,14 +325,13 @@ void CBoard::ToInvalidMove()
 void CBoard::ToValidMove() { }
 void CBoard::ToValidateBoard() 
 { 
-  RemoveMatches(); 
+  RemoveMatches();
 }
 
 void CBoard::ToFallDown()
 {
   FallDown();
   ClearDirtyItems();
-  Utils::printBoard(m_itemList);
   m_stateMachine->Go(State::GenerateBoard);
 };
 void CBoard::ToSyncBoard() 
@@ -385,4 +432,66 @@ void CBoard::PlayAnimation(CSprite *sprite, Vector2f to)
 {
   if (m_boardReady)
     sprite->AnimateTo(to);
+}
+
+void CBoard::RespondToSwipe(Vector2i mouse_pos, Vector2i diff, Vector2i abs_diff)
+{
+  State state = m_stateMachine->GetState();
+
+  switch (state)
+  {
+    case State::Idle:
+    {
+      int cur_index = Utils::GetTileFromScreenPosition(mouse_pos.x, mouse_pos.y);
+      if (cur_index == -1)
+        return;
+      if (abs_diff.y > abs_diff.x)
+      {
+        if (diff.y > 0)
+        {
+         int next_index = GetNextItemIndex(cur_index, Direction::DOWN);
+         if (next_index == -1)
+           return;
+         ClearSeleceteditemList();
+         AddSelectedItem(cur_index);
+         AddSelectedItem(next_index);
+         m_stateMachine->Go(CBoard::State::BothItemSelected);
+        }
+        else
+        {
+          int next_index = GetNextItemIndex(cur_index, Direction::UP);
+          if (next_index == -1)
+            return;
+          ClearSeleceteditemList();
+           AddSelectedItem(cur_index);
+          AddSelectedItem(next_index);
+          m_stateMachine->Go(CBoard::State::BothItemSelected);
+        }
+      }
+      else
+      {
+        if (diff.x > 0)
+        {
+          int next_index = GetNextItemIndex(cur_index, Direction::RIGHT);
+          if (next_index == -1)
+            return;
+          ClearSeleceteditemList();
+          AddSelectedItem(cur_index);
+          AddSelectedItem(next_index);
+          m_stateMachine->Go(CBoard::State::BothItemSelected);
+        }
+        else
+        {
+          int next_index = GetNextItemIndex(cur_index, Direction::LEFT);
+          if (next_index == -1)
+            return;
+          ClearSeleceteditemList();
+          AddSelectedItem(cur_index);
+          AddSelectedItem(next_index);
+          m_stateMachine->Go(CBoard::State::BothItemSelected);
+        }
+      }
+      break;
+    }
+  }
 }

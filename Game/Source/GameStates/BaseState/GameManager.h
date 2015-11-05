@@ -31,6 +31,8 @@ public:
 
 	bool Running() { return m_running; }
 	void Quit() { m_running = false; }
+  void SetGameSettings(int last_score);
+  void GetGameSettings(int &last_score, int &high_score);
   TTF_Font *GetFont(std::string font_name){ return m_fontList[font_name]; }
   CRenderer *GetRenderer() { return m_renderer; }
 private:
@@ -39,7 +41,8 @@ private:
   std::map<std::string, TTF_Font*> m_fontList;
   SDL_Window *m_window;
   CRenderer *m_renderer;
-
+  int m_highScore;
+  int m_lastScore;
 	bool m_running;
 	bool m_fullscreen;
 };

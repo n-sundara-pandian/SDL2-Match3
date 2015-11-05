@@ -9,7 +9,7 @@ public:
   void Init(CBoard *board);
   void Go(CBoard::State nextState, float delay = 0);
   bool CanTransit(CBoard::State nextState);
-  bool CanAcceptInput() { return m_currentState == CBoard::State::Idle || m_currentState == CBoard::State::OneItemSelected; }
+  bool CanAcceptInput() { return m_currentState == CBoard::State::Idle || m_currentState == CBoard::State::Hint || m_currentState == CBoard::State::OneItemSelected; }
   CBoard::State GetState();
   void AddTransit(std::pair<CBoard::State, CBoard::State> state_pair, CBoard::DoAction transition);
   void Update(float dt);

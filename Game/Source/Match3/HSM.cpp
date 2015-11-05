@@ -15,8 +15,12 @@ void HSM::Init(CBoard *board)
   m_board = board;
   // selection states
   m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::OneItemSelected)] = &CBoard::OnOneSelected;
+  m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::Hint)] = &CBoard::ToHint;
+  m_transitionMap[std::make_pair(CBoard::State::Hint, CBoard::State::OneItemSelected)] = &CBoard::OnOneSelected;
   m_transitionMap[std::make_pair(CBoard::State::OneItemSelected, CBoard::State::BothItemSelected)] = &CBoard::OnBothItemSelected;
   m_transitionMap[std::make_pair(CBoard::State::OneItemSelected, CBoard::State::Idle)] = &CBoard::ToIdle;
+  m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::BothItemSelected)] = &CBoard::OnBothItemSelected;
+
   m_transitionMap[std::make_pair(CBoard::State::Idle, CBoard::State::ValidateBoard)] = &CBoard::ToValidateBoard;
 
   // validate

@@ -20,7 +20,6 @@ public:
   void AnimateTo(const Vector2f &v);
   void MoveTo(const Vector2f &v);
   const Vector2f GetPosition() { return m_position; }
-
 private:
   CRenderer *m_renderer;
   SDL_Texture *m_texture;

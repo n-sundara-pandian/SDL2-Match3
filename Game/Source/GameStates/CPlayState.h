@@ -7,12 +7,15 @@
 #include <Match3/CBoard.h>
 #include <Match3/HSM.h>
 #include <GUI/GameHud.h>
+#include "GUI/Timer.h"
 
 class CGameManager;
 class CRenderer;
 
 class CPlayState : public CGameState
 {
+  typedef void (CPlayState::*HintCallback)(void);
+
 public:
   void Init(CGameManager* game) override;
 	void Cleanup() override;
@@ -25,11 +28,11 @@ public:
 	void Draw() override;
 
   void GameOver();
-
+  void ResetHint() {m_HintTimer = 0;}
+  void HandleHintState();
 	static CPlayState* Instance() {
 		return &m_PlayState;
 	}
-
 protected:
 	CPlayState() { }
 
@@ -41,7 +44,7 @@ private:
   CGameManager* m_game;
   GameHUD *m_gameHud;
   SDL_Texture *m_bg;
-  
+  float m_HintTimer;
 };
 
 #endif
