@@ -44,6 +44,7 @@ private:
   CGameManager* m_game;
   shared_ptr<GameHUD> m_gameHud;
   SDL_Texture *m_bg;
+  CRenderer *m_renderer;
   float m_HintTimer;
 };
 

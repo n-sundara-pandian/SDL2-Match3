@@ -1,6 +1,14 @@
 #include <Match3/CHint.h>
 #include "Utils/Common.h"
 
+CPatternManager::CPatternManager()
+{
+  m_patternList.push_back(Pattern("1101"));
+  m_patternList.push_back(Pattern("1011"));
+  //m_patternList.push_back(Pattern(ConstructTwoLinePattern("011", Utils::gGridSize - 2)));
+  //m_patternList.push_back(Pattern(ConstructTwoLinePattern("101", Utils::gGridSize - 1)));
+  //m_patternList.push_back(Pattern(ConstructTwoLinePattern("110", Utils::gGridSize)));
+}
 CPatternManager::Pattern::Pattern(std::string str)
   : name(str)
 {
@@ -15,7 +23,7 @@ std::vector<int> CPatternManager::Pattern::FindPatternAt(std::vector<int> color_
   for (int index = 0; index < pattern.size(); index++)
   {
     ItemType itype = static_cast<ItemType> (pattern[index]);
-    cur_index = GetNextIndex(cur_index, t, pattern.size() < 4);
+    cur_index = GetNextIndex(cur_index, t, true);
     switch (itype)
     {
     case MustMatch:
@@ -87,9 +95,9 @@ int CPatternManager::Pattern::GetNextIndex(int index, StepType step, bool single
   int c2 = Utils::GetColFromIndex(result);
   if (single_line_check)
   {
-  if (current_scan_type == Horizontal && (r1 != r2))
+    if (current_scan_type == Verticle  && (r1 != r2))
   result = -1;
-  else if (current_scan_type == Verticle && (c1 != c2))
+    else if (current_scan_type == Horizontal && (c1 != c2))
   result = -1;
   }
   else
@@ -111,14 +119,11 @@ std::string CPatternManager::ConstructTwoLinePattern(std::string base, int inser
   base += "1";
   return base;
 }
-void CPatternManager::Init(const std::vector<int> &board)
+void CPatternManager::Init(std::vector<int> board)
 {
-  m_board = board;
-  m_patternList.push_back(Pattern("1101"));
-  m_patternList.push_back(Pattern("1011"));
-  //m_patternList.push_back(Pattern(ConstructTwoLinePattern("011", Utils::gGridSize - 2)));
-  //m_patternList.push_back(Pattern(ConstructTwoLinePattern("101", Utils::gGridSize - 1)));
-  //m_patternList.push_back(Pattern(ConstructTwoLinePattern("110", Utils::gGridSize)));
+  m_board.clear();
+  m_board.insert(m_board.end(), board.begin(), board.end());
+ 
 }
 bool CPatternManager::HasHint(int board_index, int i, StepType t)
 {
@@ -136,8 +141,8 @@ void CPatternManager::ConstructHintList()
   {
     for (int j = 0; j < m_patternList.size(); j++)
     {
-      HasHint(i, j, StepType::Down);
-      HasHint(i, j, StepType::Right);
+      if (HasHint(i, j, StepType::Down)) return;
+      if (HasHint(i, j, StepType::Right)) return;
     }
   }
 }

@@ -11,7 +11,7 @@ struct Utils
   static const int gGridSize = 8;
   static const int gStartCol = 9;
   static const int gStartRow = 3;
-  static const int gHintTime = 10;
+  static const int gHintTime = 5;
 
   static std::string GetFileName(CItem::Color color)
   {

@@ -16,6 +16,7 @@ GameHUD::GameHUD(CGameManager *game)
   , m_isGameOver(false)
 {
   m_gameTimer = new CTimer();
+  SDL_assert(m_gameTimer != nullptr);
   m_gameTimer->Init(this, 60, &GameHUD::GameOver);
   for (int i = 0; i < 16; i++)
   {
@@ -23,8 +24,18 @@ GameHUD::GameHUD(CGameManager *game)
     m_freeBubbleList.push_back(b);
   }
   m_timertext = new CTextRenderer(m_game->GetRenderer());
+  SDL_assert(m_timertext != nullptr);
   m_timertext->SetColor(255, 0, 0);
 }
+
+GameHUD::~GameHUD()
+{
+  m_freeBubbleList.clear();
+  if (m_gameTimer != nullptr)
+    delete m_gameTimer;
+  delete m_timertext;
+}
+
 void GameHUD::Update(float dt)
 {
   if (!m_pause)

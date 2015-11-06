@@ -13,12 +13,8 @@ CIntroState CIntroState::m_IntroState;
 
 void CIntroState::Init(CGameManager* game)
 {
-	// start off opaque
-  if (game == nullptr)
-  {
-    return;
-  }
   m_game = game;
+  SDL_assert(m_game != nullptr);
 	m_timeout = 0.5f;
   m_elapsed_time = 0.0f;
   m_active = true;
@@ -28,6 +24,7 @@ void CIntroState::Init(CGameManager* game)
 
 void CIntroState::Cleanup()
 {
+
 }
 
 void CIntroState::Pause()
@@ -56,6 +53,5 @@ void CIntroState::Update( float dt)
 
 void CIntroState::Draw() 
 {
-  SDL_assert(m_splash != nullptr);
   m_game->GetRenderer()->Render( m_splash);
 }

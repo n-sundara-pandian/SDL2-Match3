@@ -1,8 +1,6 @@
 
 
 #include <iostream>
-
-
 #include <GameStates/CGameState.h>
 #include <GameStates/BaseState/GameManager.h>
 #include <GameStates/CPlayState.h>
@@ -10,6 +8,7 @@
 #include "SDL_image.h"
 #include <Utils/CRenderer.h>
 #include <Utils/Common.h>
+#include <Utils/CAudio.h>
 
 CPlayState CPlayState::m_PlayState;
 using namespace std;
@@ -18,17 +17,11 @@ using namespace std;
 void CPlayState::Init(CGameManager* game)
 {
   m_game = game;
-  if (m_game == nullptr)
-  {
-    SDL_assert(m_game != nullptr);
-    return;
-  }
+  SDL_assert(m_game != nullptr);
+  m_renderer = m_game->GetRenderer();
+  SDL_assert(m_renderer != nullptr);
   m_bg = m_game->GetRenderer()->LoadImage("data/BackGround.jpg");
-  if (m_bg == nullptr)
-  {
-    SDL_assert(m_bg != nullptr);
-    return;
-  }
+  SDL_assert(m_bg != nullptr);
   m_gameHud = make_shared<GameHUD>(game);
   m_board = CBoard(m_game->GetRenderer(), m_gameHud);
   m_stateMachine.Init(&m_board);
@@ -102,6 +95,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
             m_board.CalculateNextValidTiles(selected_item);
             m_stateMachine.Go(CBoard::State::OneItemSelected);
             ResetHint();
+            CAudio::Player.Play("Select");
             break;
         }
         case CBoard::State::OneItemSelected:
@@ -111,6 +105,7 @@ void CPlayState::HandleEvents(const SDL_Event &e)
             m_board.AddSelectedItem(selected_item);
             m_stateMachine.Go(CBoard::State::BothItemSelected);
             ResetHint();
+            CAudio::Player.Play("Select");
           }
           else
           {
@@ -148,12 +143,11 @@ void CPlayState::Update(float dt)
 
 void CPlayState::Draw()
 {
-  CRenderer *renderer = m_game->GetRenderer();
-  renderer->Clear();
-  renderer->Render(m_bg);
+  m_renderer->Clear();
+  m_renderer->Render(m_bg);
   m_board.Draw();
   m_gameHud->Draw();
-  renderer->Flip();
+  m_renderer->Flip();
 }
 
 void CPlayState::HandleHintState()

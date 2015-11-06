@@ -7,6 +7,7 @@
 #include "SDL_ttf.h"
 #include "Utils/CRenderer.h"
 #include "Utils/Common.h"
+#include <Utils/CAudio.h>
 
 void CGameManager::Init(const char* title, int width, int height, 
 						 int bpp)
@@ -26,6 +27,11 @@ void CGameManager::Init(const char* title, int width, int height,
   m_fontList["score_font"] = TTF_OpenFont("data/arialbd.ttf", 32);
   m_fontList["button_font"] = TTF_OpenFont("data/arialbd.ttf", 24);
   m_fontList["bubble_font"] = TTF_OpenFont("data/arialbd.ttf", 16);
+  CAudio::Player.Init();
+  CAudio::Player.LoadWAV("Match", "data/match.ogg");
+  CAudio::Player.LoadWAV("Select", "data/select.ogg");
+  CAudio::Player.LoadWAV("Swap", "data/swap.wav");
+  CAudio::Player.LoadWAV("Wrong", "data/click.wav");
   m_running = true;
   m_highScore = 0;
   m_lastScore = 0;
@@ -43,6 +49,7 @@ void CGameManager::Cleanup()
     delete m_renderer;
     m_renderer = nullptr;
   }
+  CAudio::Player.Cleanup();
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 

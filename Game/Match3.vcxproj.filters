@@ -55,6 +55,7 @@
     <ClCompile Include="Source\GUI\Timer.cpp" />
     <ClCompile Include="Source\Utils\CTextRenderer.cpp" />
     <ClCompile Include="Source\Match3\CHint.cpp" />
+    <ClCompile Include="Source\Utils\CAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gamestates\basestate\GameManager.h">
@@ -98,5 +99,6 @@
     <ClInclude Include="Source\GUI\GameHud.h" />
     <ClInclude Include="Source\Utils\CTextRenderer.h" />
     <ClInclude Include="Source\Match3\CHint.h" />
+    <ClInclude Include="Source\Utils\CAudio.h" />
   </ItemGroup>
 </Project>

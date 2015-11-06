@@ -47,7 +47,8 @@ public:
   };
 
   std::string ConstructTwoLinePattern(std::string base, int insert_after);
-  void Init(const std::vector<int> &board);
+  CPatternManager();
+  void Init(std::vector<int> board);
   bool HasHint(int board_index, int i, StepType t);
   void ConstructHintList();
   Hint GetHint();

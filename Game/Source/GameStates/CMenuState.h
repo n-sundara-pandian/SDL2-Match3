@@ -7,6 +7,7 @@
 
 class CGameManager;
 class CTextRenderer;
+struct SDL_Texture;
 
 class CMenuState : public CGameState
 {
@@ -31,6 +32,7 @@ protected:
 private:
 	static CMenuState m_MenuState;
   CGameManager* m_game;
+  SDL_Texture *m_splash;
   std::unique_ptr<CTextRenderer> m_gameOverText;
   std::string m_msg;
   std::string m_msg1;

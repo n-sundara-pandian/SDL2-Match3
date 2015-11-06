@@ -28,6 +28,7 @@ public:
 
 public:
   GameHUD(CGameManager *game);
+  ~GameHUD();
   void Update(float dt);
   void Draw();
   void SetupScoreBubble(std::vector<MatchInfo> match_info_list);

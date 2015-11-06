@@ -51,6 +51,7 @@ public:
   };
 public:
   CBoard(){}
+  ~CBoard();
   CBoard(CRenderer* renderer, shared_ptr<GameHUD> gameHud);
   void Init(HSM *stateMachine);
   void Draw();

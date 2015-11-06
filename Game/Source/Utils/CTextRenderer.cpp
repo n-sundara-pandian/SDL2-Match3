@@ -11,6 +11,7 @@ void CTextRenderer::DrawText(TTF_Font* font, std::string str, Vector2i pos)
     SDL_Surface *surface = TTF_RenderText_Solid(font, str.c_str(), m_color);
     SDL_Texture *texture = m_renderer->CreateTexture(surface);
     m_renderer->Render(texture, pos.x, pos.y);
+    SDL_FreeSurface(surface);
 }
 void CTextRenderer::DrawText(TTF_Font* font, std::string str)
 {

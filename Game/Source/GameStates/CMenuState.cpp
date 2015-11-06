@@ -11,6 +11,7 @@
 #include <Utils/CTextRenderer.h>
 #include <Match3/CItem.h>
 #include <Utils/Common.h>
+#include "SDL_image.h"
 
 CMenuState CMenuState::m_MenuState;
 
@@ -22,6 +23,7 @@ void CMenuState::Init(CGameManager* game)
   m_game->GetGameSettings(m_lastScore, m_highScore);
   m_msg = " You Scored " + std::to_string(m_lastScore) ;
   m_msg1 =  "Your High score is " + std::to_string(m_highScore);
+  m_splash = m_game->GetRenderer()->LoadImage("data/splash.png");
 }
 
 void CMenuState::Cleanup()
@@ -71,6 +73,8 @@ void CMenuState::Update( float dt)
 
 void CMenuState::Draw() 
 {
+  SDL_assert(m_splash != nullptr);
+  m_game->GetRenderer()->Render(m_splash);
   m_gameOverText->DrawText(m_game->GetFont("button_font"), m_msg, Vector2i(50, 150));
   m_gameOverText->SetColor(Utils::GetColor(CItem::Color::Green));
   m_gameOverText->DrawText(m_game->GetFont("button_font"), m_msg1, Vector2i(50, 200));

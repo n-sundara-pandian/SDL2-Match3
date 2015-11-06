@@ -3,6 +3,7 @@
 #include <Utils/Common.h>
 #include <Match3/HSM.h>
 #include <GUI/GameHud.h>
+#include "Utils/CAudio.h"
 
 CBoard::CBoard(CRenderer* renderer, shared_ptr<GameHUD> gameHud)
   : m_renderer(renderer)
@@ -11,6 +12,13 @@ CBoard::CBoard(CRenderer* renderer, shared_ptr<GameHUD> gameHud)
   , m_showHint(false)
 {
   
+}
+
+CBoard::~CBoard()
+{
+  m_itemList.clear();
+  m_spriteList.clear();
+  m_hintList.clear();
 }
 
 void CBoard::Init(HSM *stateMachine)
@@ -126,6 +134,8 @@ void CBoard::RemoveMatches()
 
   if (m_matchedItemList.size() > 0)
   {
+    if (m_boardReady)
+      CAudio::Player.Play("Match");
     m_stateMachine->Go(State::FallDown, 0.2f);
     m_gameHud->SetupScoreBubble(m_matchInfoList);
   }
@@ -277,13 +287,22 @@ void CBoard::ToHint()
   m_patternManager.Init(color_list);
   m_patternManager.ConstructHintList();
   CPatternManager::Hint h = m_patternManager.GetHint();
+  if (h.index_list.size() < 3)
+  {
+    
+    m_stateMachine->Go(State::Idle);
+    m_showHint = false;
+    return;
+  }
   for (int i = 0; i < h.index_list.size(); i++)
   {
+    SDL_Log(" %d ", h.index_list[i]);
     int row = Utils::GetRowFromIndex(h.index_list[i]);
     int col = Utils::GetColFromIndex(h.index_list[i]);
     m_hintList[i]->MoveTo(Vector2f(col + Utils::gStartCol, Utils::gStartRow + row));
   }
   m_showHint = true;
+  m_stateMachine->Go(State::Idle);
 }
 void CBoard::OnOneSelected() { m_showHint = false; }
 
@@ -435,7 +454,13 @@ void CBoard::PlayAnimation(const weak_ptr<CSprite>sprite, const Vector2f to)
 void CBoard::RespondToSwipe(const Vector2i &mouse_pos, const Vector2i &diff, const Vector2i &abs_diff)
 {
   State state = m_stateMachine->GetState();
-
+  auto swipe = [](CBoard *board, int cur_index, int next_index) {          
+    board->ClearSeleceteditemList();
+    board->AddSelectedItem(cur_index);
+    board->AddSelectedItem(next_index);
+    board->m_stateMachine->Go(CBoard::State::BothItemSelected);
+    CAudio::Player.Play("Wrong");
+  };
   switch (state)
   {
     case State::Idle:
@@ -450,20 +475,14 @@ void CBoard::RespondToSwipe(const Vector2i &mouse_pos, const Vector2i &diff, con
          int next_index = GetNextItemIndex(cur_index, Direction::DOWN);
          if (next_index == -1)
            return;
-         ClearSeleceteditemList();
-         AddSelectedItem(cur_index);
-         AddSelectedItem(next_index);
-         m_stateMachine->Go(CBoard::State::BothItemSelected);
+         swipe(this, cur_index, next_index);
         }
         else
         {
           int next_index = GetNextItemIndex(cur_index, Direction::UP);
           if (next_index == -1)
             return;
-          ClearSeleceteditemList();
-           AddSelectedItem(cur_index);
-          AddSelectedItem(next_index);
-          m_stateMachine->Go(CBoard::State::BothItemSelected);
+          swipe(this, cur_index, next_index);
         }
       }
       else
@@ -473,20 +492,14 @@ void CBoard::RespondToSwipe(const Vector2i &mouse_pos, const Vector2i &diff, con
           int next_index = GetNextItemIndex(cur_index, Direction::RIGHT);
           if (next_index == -1)
             return;
-          ClearSeleceteditemList();
-          AddSelectedItem(cur_index);
-          AddSelectedItem(next_index);
-          m_stateMachine->Go(CBoard::State::BothItemSelected);
+          swipe(this, cur_index, next_index);
         }
         else
         {
           int next_index = GetNextItemIndex(cur_index, Direction::LEFT);
           if (next_index == -1)
             return;
-          ClearSeleceteditemList();
-          AddSelectedItem(cur_index);
-          AddSelectedItem(next_index);
-          m_stateMachine->Go(CBoard::State::BothItemSelected);
+          swipe(this, cur_index, next_index);
         }
       }
       break;

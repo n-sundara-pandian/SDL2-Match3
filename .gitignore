@@ -23,3 +23,6 @@ Game/Debug/vc120.idb
 Game/Debug/vc120.pdb
 Game/Match3.opensdf
 Game/Match3.sdf
+*.obj
+*.log
+*.suo

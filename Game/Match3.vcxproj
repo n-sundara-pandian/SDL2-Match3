@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>F:\Test\BitBucket\King\Match3\Game\Source;F:\Test\BitBucket\King\Match3\Lib\SDL2-2.0.3\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_ttf-2.0.12\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_image-2.0.0\include;F:\Test\BitBucket\King\Match3\Game\Source\SDLcpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Test\BitBucket\King\Match3\Game\Source;F:\Test\BitBucket\King\Match3\Lib\SDL2-2.0.3\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_ttf-2.0.12\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_image-2.0.0\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_mixer-2.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -67,6 +67,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>F:\Test\BitBucket\King\Match3\Game\Source;F:\Test\BitBucket\King\Match3\Lib\SDL2-2.0.3\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_ttf-2.0.12\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_image-2.0.0\include;F:\Test\BitBucket\King\Match3\Lib\SDL2_mixer-2.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -74,6 +75,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\Test\BitBucket\King\Match3\Lib\SDL2-2.0.3\lib\x86;F:\Test\BitBucket\King\Match3\Lib\SDL2_ttf-2.0.12\lib\x86;F:\Test\BitBucket\King\Match3\Lib\SDL2_mixer-2.0.0\lib\x86;F:\Test\BitBucket\King\Match3\Lib\SDL2_image-2.0.0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -89,6 +92,7 @@
     <ClCompile Include="Source\Match3\CItem.cpp" />
     <ClCompile Include="Source\Match3\HSM.cpp" />
     <ClCompile Include="Source\Utils\CAABB.cpp" />
+    <ClCompile Include="Source\Utils\CAudio.cpp" />
     <ClCompile Include="Source\Utils\CRenderer.cpp" />
     <ClCompile Include="Source\Utils\CSprite.cpp" />
     <ClCompile Include="Source\Utils\CTextRenderer.cpp" />
@@ -106,6 +110,7 @@
     <ClInclude Include="Source\Match3\CItem.h" />
     <ClInclude Include="Source\Match3\HSM.h" />
     <ClInclude Include="Source\Utils\CAABB.h" />
+    <ClInclude Include="Source\Utils\CAudio.h" />
     <ClInclude Include="Source\Utils\CTextRenderer.h" />
     <ClInclude Include="Source\Utils\Common.h" />
     <ClInclude Include="Source\Utils\CRenderer.h" />
