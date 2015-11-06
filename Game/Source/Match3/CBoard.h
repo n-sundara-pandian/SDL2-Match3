@@ -51,20 +51,10 @@ public:
   };
 public:
   CBoard(){}
-  CBoard(CRenderer* renderer, GameHUD *gameHud);
-  void Init(HSM * stateMachine);
-  void GenerateBoard();
+  CBoard(CRenderer* renderer, shared_ptr<GameHUD> gameHud);
+  void Init(HSM *stateMachine);
   void Draw();
   void Update(float dt);
-  void FallDown();
-  void ValidateMove();
-  void RemoveMatches();
-
-  CItem::Color GetColorAt(int index);
-  void AddSelectedItem(int item);
-  void ClearSeleceteditemList() { m_selectedItemList.clear(); }
-  void SyncItemToPosition(int index, bool bmove);
-
   void ToIdle();
   void OnOneSelected();
   void OnBothItemSelected();
@@ -78,34 +68,42 @@ public:
   void ToSyncBoard();
   void OnMakeMove();
   void ToActualSwap();
-  void CalculateNextValidTiles(int index);
-  bool IsValidSelection(int selected_item);
-  void Animate();
+  void RespondToSwipe(const Vector2i &mouse_pos, const Vector2i &diff, const Vector2i &abs_diff);
+  void CalculateNextValidTiles(const int &index);
+  bool IsValidSelection(const int &selected_item) const;
+  void AddSelectedItem(const int &item);
+  void ClearSeleceteditemList() { m_selectedItemList.clear(); }
   bool IsBoardReady() { return m_boardReady; }
-  void RespondToSwipe(Vector2i mouse_pos, Vector2i diff, Vector2i abs_diff);
 
 private:
   std::vector<CItem> m_itemList;
-  std::vector<CSprite*> m_spriteList;
-  std::vector<CSprite*> m_hintList;
-  std::vector<int> m_matchedItemList;
+  std::vector<shared_ptr<CSprite>> m_spriteList;
+  std::vector<shared_ptr<CSprite>> m_hintList;
   std::vector<MatchInfo> m_matchInfoList;
+  std::vector<int> m_matchedItemList;
   std::vector<int> m_nextValidSelectionList;
-  GameHUD *m_gameHud;
+  std::vector<int> m_selectedItemList;
+  CPatternManager m_patternManager;
+  shared_ptr<GameHUD> m_gameHud;
   CRenderer *m_renderer;
   HSM *m_stateMachine;
-  std::vector<int> m_selectedItemList;
-  SDL_TimerID m_delayTimer;
-  CPatternManager m_patternManager;
   bool m_boardReady;
   bool m_showHint;
+
 private:
-  int GetNextItemIndex(int cur_index, Direction dir);
+  CItem::Color GetColorAt(const int &index);
+  int GetNextItemIndex(const int &cur_index, const Direction &dir) const;
   int ProbeNeighbour(int index, Direction direction);
-  void PlaySwapAnimation(int a, int b);
+  void GenerateBoard();
+  void FallDown();
+  void ValidateMove();
+  void RemoveMatches();
+  void PlaySwapAnimation(const int &a, const int &b);
   void DoItemSwap(int a, int b);
-  void SetItemStatus(int index, CItem::State state);
+  void SetItemStatus(const int &index, const CItem::State &state);
   void ClearDirtyItems();
-  void PlayAnimation(CSprite *sprite, Vector2f to);
+  void PlayAnimation(const weak_ptr<CSprite>sprite, const Vector2f to);
+  void Animate();
+  void SyncItemToPosition(const int &index, const bool &bmove);
 };
 #endif // CBOARD_H

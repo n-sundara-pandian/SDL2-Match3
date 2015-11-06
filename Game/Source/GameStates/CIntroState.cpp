@@ -16,7 +16,6 @@ void CIntroState::Init(CGameManager* game)
 	// start off opaque
   if (game == nullptr)
   {
-    SDL_Log("Invalid game ptr not initializing");
     return;
   }
   m_game = game;

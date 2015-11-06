@@ -12,7 +12,7 @@ class CRenderer;
 
 class CSprite {
 public:
-  static CSprite * CreateSprite(CRenderer* graphics, const std::string& file_name, Vector2f position);
+  CSprite(CRenderer* graphics, const std::string& file_name, Vector2f position);
   virtual ~CSprite() {};
   virtual void Update(float dt);
   void Draw();
@@ -28,7 +28,6 @@ private:
 
 
 private:
-  CSprite(CRenderer* graphics, const std::string& file_name, Vector2f position);
   void Draw(const Vector2f& pos) const;
   void SetPosition(const Vector2f &v);
 

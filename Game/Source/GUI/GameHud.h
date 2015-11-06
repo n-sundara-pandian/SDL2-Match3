@@ -16,12 +16,10 @@ public:
   struct bubble
   {
     int m_id;
-    CTimer *m_timer;
     CTextRenderer *m_text;
     bool m_active;
-    bubble(int id, CTimer *timer, CTextRenderer *text)
-      : m_timer(timer)
-      , m_text(text)
+    bubble(int id,  CTextRenderer *text)
+      : m_text(text)
       , m_id(id)
       , m_active(false)
     {}

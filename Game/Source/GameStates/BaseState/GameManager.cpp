@@ -38,7 +38,11 @@ void CGameManager::Cleanup()
 		states.back()->Cleanup();
 		states.pop_back();
 	}
-
+  if (m_renderer != nullptr)
+  {
+    delete m_renderer;
+    m_renderer = nullptr;
+  }
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 
@@ -101,16 +105,15 @@ void CGameManager::Update(float dt)
 void CGameManager::Draw() 
 {
   m_renderer->Clear();
-	// let the state draw the screen
 	states.back()->Draw();
   m_renderer->Flip();
 }
 
 void CGameManager::SetGameSettings(int last_score)
 {
+  m_lastScore = last_score;
   if (last_score > m_highScore)
-    m_highScore = last_score;
-  m_lastScore = m_highScore;
+    m_highScore = m_lastScore;
 }
 
 void CGameManager::GetGameSettings(int &last_score, int &high_score)

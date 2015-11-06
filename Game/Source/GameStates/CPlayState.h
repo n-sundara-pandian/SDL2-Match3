@@ -42,7 +42,7 @@ private:
   CBoard m_board;
   HSM m_stateMachine;
   CGameManager* m_game;
-  GameHUD *m_gameHud;
+  shared_ptr<GameHUD> m_gameHud;
   SDL_Texture *m_bg;
   float m_HintTimer;
 };

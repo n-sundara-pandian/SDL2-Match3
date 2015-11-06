@@ -19,10 +19,7 @@ GameHUD::GameHUD(CGameManager *game)
   m_gameTimer->Init(this, 60, &GameHUD::GameOver);
   for (int i = 0; i < 16; i++)
   {
-    CTimer *timer = new CTimer();
-    timer->Init(this, 1, &GameHUD::TimerCallback);
-    timer->Pause();
-    bubble b = bubble(i, timer, new CTextRenderer(m_game->GetRenderer()));
+    bubble b = bubble(i,new CTextRenderer(m_game->GetRenderer()));
     m_freeBubbleList.push_back(b);
   }
   m_timertext = new CTextRenderer(m_game->GetRenderer());
@@ -32,14 +29,6 @@ void GameHUD::Update(float dt)
 {
   if (!m_pause)
     m_gameTimer->Tick(dt);
-  if (m_showScoreBubble)
-  {
-    for (auto it = m_freeBubbleList.begin(); it != m_freeBubbleList.end(); it++)
-    {
-      if ((*it).m_active) 
-        (*it).m_timer->Tick(dt);
-    }
-  }
 }
 void GameHUD::Draw()
 {
@@ -96,20 +85,16 @@ void GameHUD::ActivateBubble(MatchInfo match_info)
       b.m_text->SetPosition(Utils::GetScreenPosFromIndex(match_info.index));
       b.m_text->SetText(std::to_string(match_info.score));
       b.m_text->SetColor(Utils::GetColor(match_info.color));
-      b.m_timer->Start();
       m_freeBubbleList[i].m_active = true;
       found = true;
     }
   }
   if (!found)
   {
-    CTimer *timer = new CTimer();
-    timer->Init(this, 1, &GameHUD::TimerCallback);
-    bubble b = bubble(m_freeBubbleList.size(), timer, new CTextRenderer(m_game->GetRenderer()));
+    bubble b = bubble(m_freeBubbleList.size(), /*timer*/ new CTextRenderer(m_game->GetRenderer()));
     b.m_text->SetPosition(Utils::GetScreenPosFromIndex(match_info.index));
     b.m_text->SetText(std::to_string(match_info.score));
     b.m_text->SetColor(Utils::GetColor(match_info.color));
-    b.m_timer->Start();
     m_freeBubbleList.push_back(b);
   }
 }

@@ -5,12 +5,12 @@
 #include <GameStates/BaseState/GameManager.h>
 #include <GameStates/CGameState.h>
 #include <GameStates/CMenuState.h>
-#include "Utils/CRenderer.h"
-#include "Utils/Vector.h"
-#include "Utils/CTextRenderer.h"
-#include "Match3/CItem.h"
-#include "Utils/Common.h"
-#include "CPlayState.h"
+#include <GameStates/CPlayState.h>
+#include <Utils/CRenderer.h>
+#include <Utils/Vector.h>
+#include <Utils/CTextRenderer.h>
+#include <Match3/CItem.h>
+#include <Utils/Common.h>
 
 CMenuState CMenuState::m_MenuState;
 
@@ -52,6 +52,14 @@ void CMenuState::HandleEvents(const SDL_Event &e)
         m_game->ChangeState(CPlayState::Instance());
         break;
       }
+    }
+  }
+  else if (e.type == SDL_MOUSEBUTTONDOWN)
+  {
+    if (e.button.button == SDL_BUTTON_LEFT)
+    {
+      m_game->ChangeState(CPlayState::Instance());
+
     }
   }
 }

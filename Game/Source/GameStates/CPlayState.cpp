@@ -18,13 +18,18 @@ using namespace std;
 void CPlayState::Init(CGameManager* game)
 {
   m_game = game;
-  m_bg = m_game->GetRenderer()->LoadImage("data/BackGround.jpg");  
+  if (m_game == nullptr)
+  {
+    SDL_assert(m_game != nullptr);
+    return;
+  }
+  m_bg = m_game->GetRenderer()->LoadImage("data/BackGround.jpg");
   if (m_bg == nullptr)
   {
     SDL_assert(m_bg != nullptr);
     return;
   }
-  m_gameHud = new GameHUD(game);
+  m_gameHud = make_shared<GameHUD>(game);
   m_board = CBoard(m_game->GetRenderer(), m_gameHud);
   m_stateMachine.Init(&m_board);
   m_board.Init(&m_stateMachine);
@@ -32,7 +37,6 @@ void CPlayState::Init(CGameManager* game)
 
 void CPlayState::Cleanup()
 {
-  
 }
 
 void CPlayState::Pause()
@@ -117,14 +121,6 @@ void CPlayState::HandleEvents(const SDL_Event &e)
           break;
         }
         }
-      }
-    }
-    if (e.button.button == SDL_BUTTON_RIGHT)
-    {
-      int selected_item = Utils::GetTileFromScreenPosition(e.button.x, e.button.y);
-      if (selected_item != -1)
-      {
-        SDL_Log("color at %d is %s", selected_item, Utils::GetFileName(m_board.GetColorAt(selected_item)).c_str());
       }
     }
   }
