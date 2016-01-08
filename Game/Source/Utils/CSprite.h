@@ -12,7 +12,7 @@ class CRenderer;
 
 class CSprite {
 public:
-  CSprite(CRenderer* graphics, const std::string& file_name, Vector2f position);
+  CSprite(CRenderer* graphics, const std::string& file_name, Vector2f position, int size = -1);
   virtual ~CSprite() {};
   virtual void Update(float dt);
   void Draw();

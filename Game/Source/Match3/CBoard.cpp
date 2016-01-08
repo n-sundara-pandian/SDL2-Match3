@@ -48,6 +48,8 @@ void CBoard::GenerateBoard()
   {
     m_hintList.push_back(make_shared<CSprite>(m_renderer, "data/hint.png", Vector2f(-20, 20)));
   }
+  Vector2f screen_position(Utils::gStartCol + Utils::GetColFromIndex(0), Utils::gStartRow + Utils::GetRowFromIndex(0));
+  m_tile = new CSprite(m_renderer, "data/Tile.png", screen_position, Utils::gTileSize * Utils::gGridSize);
   m_stateMachine->Go(State::ValidateBoard);
 }
 
@@ -233,6 +235,7 @@ void CBoard::Update(float dt)
 
 void CBoard::Draw()
 {
+  m_tile->Draw();
   for (int i = 0; i < m_spriteList.size(); i++)
   {
     if (m_itemList[i].GetState() == CItem::State::Clean)
@@ -243,7 +246,6 @@ void CBoard::Draw()
   {
     m_hintList[i]->Draw();
   }
-
 }
 
 void CBoard::Animate()

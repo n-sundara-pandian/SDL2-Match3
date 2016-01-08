@@ -2,10 +2,13 @@
 #include <Utils/CSprite.h>
 #include "SDL_rect.h"
 #include "Common.h"
-CSprite::CSprite(CRenderer* graphics, const std::string& file_name, Vector2f position)
+CSprite::CSprite(CRenderer* graphics, const std::string& file_name, Vector2f position, int size)
 {
-  m_SrcRect.w = Utils::gTileSize;
-  m_SrcRect.h = Utils::gTileSize;
+  int tile_size = size;
+  if (tile_size == -1)
+    tile_size = Utils::gTileSize;
+  m_SrcRect.w = tile_size;
+  m_SrcRect.h = tile_size;
   m_renderer = graphics;
   SetTexture(file_name);
   SetPosition(position);
@@ -14,8 +17,8 @@ CSprite::CSprite(CRenderer* graphics, const std::string& file_name, Vector2f pos
 
 void CSprite::Draw(const Vector2f& pos) const
 {
-  const int dstx = static_cast<int>(pos.x * m_SrcRect.w);
-  const int dsty = static_cast<int>(pos.y * m_SrcRect.h);
+  const int dstx = static_cast<int>(pos.x * Utils::gTileSize);
+  const int dsty = static_cast<int>(pos.y * Utils::gTileSize);
 
   m_renderer->Render(m_texture, dstx, dsty, &m_SrcRect);
 }

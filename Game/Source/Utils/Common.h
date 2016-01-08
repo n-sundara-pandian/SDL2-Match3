@@ -18,19 +18,19 @@ struct Utils
     switch (color)
     {
     case CItem::Color::Red:
-      return "data/Red.png";
+      return "data/Cupcake.png";
     case CItem::Color::Blue:
-      return "data/Blue.png";
+      return "data/Danish.png";
     case CItem::Color::Green:
-      return "data/Green.png";
+      return "data/Macaroon.png";
     case CItem::Color::Yellow:
-      return "data/Yellow.png";
+      return "data/SugarCookie.png";
     case CItem::Color::Purple:
-      return "data/Purple.png";
+      return "data/Donut.png";
     default:
       break;
     }
-  return "data/Purple.png";
+  return "data/witch.png";
   }
   static SDL_Color GetColor(CItem::Color color)
   {

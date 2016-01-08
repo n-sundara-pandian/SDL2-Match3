@@ -20,7 +20,7 @@ void CPlayState::Init(CGameManager* game)
   SDL_assert(m_game != nullptr);
   m_renderer = m_game->GetRenderer();
   SDL_assert(m_renderer != nullptr);
-  m_bg = m_game->GetRenderer()->LoadImage("data/BackGround.jpg");
+  m_bg = m_game->GetRenderer()->LoadImage("data/BackGround.png");
   SDL_assert(m_bg != nullptr);
   m_gameHud = make_shared<GameHUD>(game);
   m_board = CBoard(m_game->GetRenderer(), m_gameHud);

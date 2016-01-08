@@ -23,7 +23,7 @@ void CMenuState::Init(CGameManager* game)
   m_game->GetGameSettings(m_lastScore, m_highScore);
   m_msg = " You Scored " + std::to_string(m_lastScore) ;
   m_msg1 =  "Your High score is " + std::to_string(m_highScore);
-  m_splash = m_game->GetRenderer()->LoadImage("data/splash.png");
+  m_splash = m_game->GetRenderer()->LoadImage("data/BackGround.png");
 }
 
 void CMenuState::Cleanup()

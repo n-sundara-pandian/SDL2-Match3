@@ -18,7 +18,7 @@ void CIntroState::Init(CGameManager* game)
 	m_timeout = 0.5f;
   m_elapsed_time = 0.0f;
   m_active = true;
-  m_splash = m_game->GetRenderer()->LoadImage("data/splash.png");
+  m_splash = m_game->GetRenderer()->LoadImage("data/BackGround.png");
   SDL_assert(m_splash != nullptr);
 }
 

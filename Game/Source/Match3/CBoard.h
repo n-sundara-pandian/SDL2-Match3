@@ -84,6 +84,7 @@ private:
   std::vector<int> m_matchedItemList;
   std::vector<int> m_nextValidSelectionList;
   std::vector<int> m_selectedItemList;
+  CSprite *m_tile;
   CPatternManager m_patternManager;
   shared_ptr<GameHUD> m_gameHud;
   CRenderer *m_renderer;
